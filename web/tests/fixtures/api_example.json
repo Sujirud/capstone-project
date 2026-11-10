@@ -1,0 +1,219 @@
+{
+  "name": "api_example",
+  "meta": {
+    "age": 22,
+    "sex": "female",
+    "frontal_source": "camera",
+    "lang": "th",
+    "lab": false
+  },
+  "images": {
+    "frontal": {
+      "width": 1280,
+      "height": 1600,
+      "source": "camera"
+    },
+    "profile": {
+      "width": 1280,
+      "height": 1600,
+      "source": "camera"
+    }
+  },
+  "result": {
+    "request_id": "5f0c2a9e-0d1b-4c8e-9a51-2f3e7b6d8c10",
+    "versions": {
+      "api": "1.0.0",
+      "model_bundle": "1.0.0"
+    },
+    "lab": false,
+    "retake": [],
+    "quality": {
+      "frontal": {
+        "iod_px": 96.0,
+        "yaw_deg": 0.9,
+        "pitch_deg": -0.8,
+        "roll_deg": 0.5,
+        "smile": 0.05,
+        "jaw_open": 0.02,
+        "blink_left": 0.03,
+        "blink_right": 0.04,
+        "hair_jaw": 0.02,
+        "hair_undereye_left": 0.0,
+        "hair_undereye_right": 0.0,
+        "failed": []
+      },
+      "profile": {
+        "face_found": false,
+        "face_yaw_deg": null,
+        "silhouette_found": true,
+        "flipped": false,
+        "failed": []
+      }
+    },
+    "regions": [
+      {
+        "region": "jaw",
+        "status": "assessed",
+        "status_reasons": [],
+        "warnings": [],
+        "measurements": [
+          {
+            "name": "facial_taperness",
+            "value": 83.6,
+            "unit": "%",
+            "method": "model",
+            "landmark_value": 84.2,
+            "cutoffs": [
+              {
+                "value": 83.0,
+                "band": 1.0
+              },
+              {
+                "value": 87.0,
+                "band": 1.0
+              }
+            ],
+            "reference": "จุดตัด 83% ช่วงก้ำกึ่ง ±1",
+            "source": "[3]"
+          }
+        ],
+        "overlay": {
+          "image": "frontal",
+          "points": {
+            "go_l": [
+              405.0,
+              980.0
+            ],
+            "go_r": [
+              877.0,
+              978.0
+            ],
+            "zy_l": [
+              356.0,
+              640.0
+            ],
+            "zy_r": [
+              920.0,
+              642.0
+            ]
+          },
+          "lines": [
+            [
+              "go_l",
+              "go_r"
+            ],
+            [
+              "zy_l",
+              "zy_r"
+            ]
+          ]
+        },
+        "probabilities": null,
+        "decision": {
+          "grade": null,
+          "grade_range": [
+            "0",
+            "1"
+          ],
+          "level": "borderline"
+        },
+        "procedures": [],
+        "procedures_withheld": [
+          "no_procedure_at_grade"
+        ],
+        "notes": []
+      },
+      {
+        "region": "nose_dorsum",
+        "status": "assessed",
+        "status_reasons": [],
+        "warnings": [],
+        "measurements": [
+          {
+            "name": "nasofacial_angle",
+            "value": 28.5,
+            "unit": "deg",
+            "method": "measured",
+            "landmark_value": null,
+            "cutoffs": [
+              {
+                "value": 30.1,
+                "band": 1.35
+              },
+              {
+                "value": 32.8,
+                "band": 1.35
+              },
+              {
+                "value": 38.4,
+                "band": 1.5
+              }
+            ],
+            "reference": "หญิง เกรด 0 อยู่ที่ 32.8–38.4° เกรด ≥2 เมื่อน้อยกว่า 30.1°",
+            "source": "[39]"
+          }
+        ],
+        "overlay": {
+          "image": "profile",
+          "points": {
+            "g": [
+              640.0,
+              410.0
+            ],
+            "n": [
+              655.0,
+              520.0
+            ],
+            "prn": [
+              774.0,
+              760.0
+            ],
+            "pog": [
+              610.0,
+              1210.0
+            ]
+          },
+          "lines": [
+            [
+              "g",
+              "pog"
+            ],
+            [
+              "n",
+              "prn"
+            ]
+          ]
+        },
+        "probabilities": null,
+        "decision": {
+          "grade": "2+",
+          "grade_range": null,
+          "level": "clear"
+        },
+        "procedures": [
+          {
+            "code": "nose_filler",
+            "name": "ฉีดฟิลเลอร์จมูก",
+            "when": "รุกล้ำน้อยกว่าและมีการทดลองแบบสุ่มรองรับ",
+            "checks": null
+          },
+          {
+            "code": "rhinoplasty_implant",
+            "name": "เสริมจมูก",
+            "when": "การเสริมด้วยแกนให้ผลถาวรกว่า",
+            "checks": null
+          }
+        ],
+        "procedures_withheld": [],
+        "notes": [
+          {
+            "code": "nose_filler_vision_risk",
+            "text": "จมูกเป็นตำแหน่งที่มีรายงานการสูญเสียการมองเห็นหลังฉีดฟิลเลอร์มากที่สุด",
+            "with_procedures": true
+          }
+        ]
+      }
+    ],
+    "disclaimer": "ผลนี้เป็นการนำเกณฑ์จากงานวิจัยมาใช้กับค่าที่วัดจากภาพถ่าย ไม่ใช่การวินิจฉัย การตัดสินใจทำหัตถการต้องผ่านการตรวจโดยแพทย์"
+  }
+}

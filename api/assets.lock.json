@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "files": [
+    {
+      "name": "face_landmarker.task",
+      "url": "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task",
+      "size": 3758596,
+      "sha256": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+    },
+    {
+      "name": "selfie_multiclass_256x256.tflite",
+      "url": "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite",
+      "size": 16371837,
+      "sha256": "c6748b1253a99067ef71f7e26ca71096cd449baefa8f101900ea23016507e0e0"
+    },
+    {
+      "name": "dinov2_vitb14_pretrain.pth",
+      "url": "https://dl.fbaipublicfiles.com/dinov2/dinov2_vitb14/dinov2_vitb14_pretrain.pth",
+      "size": 346378731,
+      "sha256": "0b8b82f85de91b424aded121c7e1dcc2b7bc6d0adeea651bf73a13307fad8c73"
+    },
+    {
+      "name": "dinov2-7764ea0f912e53c92e82eb78a2a1631e92725fc8.zip",
+      "url": "https://github.com/facebookresearch/dinov2/archive/7764ea0f912e53c92e82eb78a2a1631e92725fc8.zip",
+      "size": 3001681,
+      "sha256": "04276715cddb29d45d05bff3a6fc132224dc27749b279ac98ad2ce4620e20d48",
+      "commit": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+      "extract": "dinov2_src"
+    }
+  ]
+}

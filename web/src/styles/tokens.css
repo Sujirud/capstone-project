@@ -1,0 +1,54 @@
+/* Theme "pink marble" (web.md section 6): colours, fonts and sizes. */
+:root {
+  /* web.md section 6.1 */
+  --marble: #FAF7F2; /* main background */
+  --cream: #F1E7D8; /* cards, masthead, the "borderline" badge */
+  --blush: #E8C3C1; /* second accent, selected things */
+  --sky: #BFD4E7; /* the "clear" badge, secondary buttons */
+  --cocoa: #4B3A31; /* main text, primary buttons, the under-eye frame */
+  --cocoa-soft: #6E5A4F; /* secondary text: only on --marble, --cream and --stone */
+  --line: #E2D6C4; /* rules and card edges */
+  --stone: #E9E4DE; /* the "values only" and "not assessable" badges */
+  --key: #B9A48F; /* Greek key and decorative lines */
+  --ink-blue: #2F5F8A; /* measurement lines, focus ring */
+  --ink-rose: #B5636A; /* the measurement lines of the other region on the same image */
+
+  --error: #B3261E; /* form errors and the mark of required fields only, never results */
+
+  /* white under the measurement lines and around the dots (web.md section 5.1) */
+  --white: #FFFFFF;
+
+  /* web.md section 6.2 */
+  --font-heading: "Trirong", "Noto Sans Thai", serif;
+  --font-latin: "Cormorant Garamond", "Times New Roman", serif;
+  --font-body: "Noto Sans Thai", system-ui, sans-serif;
+  --size-body: 16px;
+  --size-small: 14px; /* the smallest text */
+  --size-h1: 28px;
+  --size-h2: 22px;
+  --size-h3: 18px;
+  --size-guide: 30px; /* the pose message, read from 1 m (web.md section 6.3) */
+  --leading: 1.65;
+
+  /* web.md section 6.3: every border and rule is 1px */
+  --border: 1px;
+  --radius-card: 12px;
+  --radius-control: 8px; /* buttons, inputs, inner boxes */
+  --radius-tag: 4px; /* badges and the upload label */
+  --button-height: 42px;
+  --focus-width: 2px;
+  --focus-offset: 3px; /* the ring sits on the background, off the button (web.md section 6.3) */
+
+  /* spacing scale; layouts use gap, so no element leaves a margin at the end of its box */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  --content-width: 960px;
+  --narrow-width: 640px;
+  --medium-width: 760px;
+}

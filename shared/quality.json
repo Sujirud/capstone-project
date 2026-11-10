@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "frontal": {
+    "min_iod_px": 75,
+    "max_abs_yaw_deg": 10,
+    "max_abs_pitch_deg": 10,
+    "max_abs_roll_deg": 8,
+    "max_smile": 0.3,
+    "max_jaw_open": 0.2,
+    "max_eye_blink": 0.5,
+    "hair_band_width_iod": 0.05,
+    "max_hair_fraction": 0.1
+  },
+  "profile": {
+    "min_abs_yaw_deg": 40
+  },
+  "request": {
+    "max_bytes": 26214400
+  }
+}

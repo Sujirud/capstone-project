@@ -1,0 +1,555 @@
+{
+  "name": "age_20",
+  "meta": {
+    "age": 20,
+    "sex": "female",
+    "frontal_source": "camera",
+    "lang": "th",
+    "lab": false
+  },
+  "images": {
+    "frontal": {
+      "width": 1280,
+      "height": 1600,
+      "source": "camera"
+    },
+    "profile": {
+      "width": 1280,
+      "height": 1600,
+      "source": "camera"
+    }
+  },
+  "result": {
+    "request_id": "77dc6e8b-e92a-4f91-b42b-e0a887c0201d",
+    "versions": {
+      "api": "0.1.0",
+      "model_bundle": "0.0.0-stub"
+    },
+    "lab": false,
+    "retake": [],
+    "quality": {
+      "frontal": {
+        "iod_px": 160.0,
+        "yaw_deg": 1.2,
+        "pitch_deg": -2.1,
+        "roll_deg": 0.4,
+        "smile": 0.04,
+        "jaw_open": 0.01,
+        "blink_left": 0.05,
+        "blink_right": 0.06,
+        "hair_jaw": 0.01,
+        "hair_undereye_left": 0.0,
+        "hair_undereye_right": 0.0,
+        "failed": []
+      },
+      "profile": {
+        "face_found": false,
+        "face_yaw_deg": null,
+        "silhouette_found": true,
+        "flipped": false,
+        "failed": []
+      }
+    },
+    "regions": [
+      {
+        "region": "jaw",
+        "status": "assessed",
+        "status_reasons": [],
+        "warnings": [],
+        "measurements": [
+          {
+            "name": "facial_taperness",
+            "value": 90.0,
+            "unit": "%",
+            "method": "model",
+            "landmark_value": 90.0,
+            "cutoffs": [
+              {
+                "value": 83.0,
+                "band": 1.0
+              },
+              {
+                "value": 87.0,
+                "band": 1.0
+              }
+            ],
+            "reference": "จุดตัด 83% ช่วงก้ำกึ่ง ±1",
+            "source": "[3]"
+          }
+        ],
+        "overlay": {
+          "image": "frontal",
+          "points": {
+            "go_l": [
+              440.0,
+              1010.0
+            ],
+            "go_r": [
+              840.0,
+              1012.0
+            ],
+            "zy_l": [
+              398.0,
+              760.0
+            ],
+            "zy_r": [
+              882.0,
+              761.0
+            ]
+          },
+          "lines": [
+            [
+              "go_l",
+              "go_r"
+            ],
+            [
+              "zy_l",
+              "zy_r"
+            ]
+          ]
+        },
+        "probabilities": null,
+        "decision": {
+          "grade": "2+",
+          "grade_range": null,
+          "level": "clear"
+        },
+        "procedures": [
+          {
+            "code": "botox_masseter",
+            "name": "ฉีดโบท็อกซ์กราม",
+            "when": "เมื่อความกว้างเกิดจากกล้ามเนื้อกราม",
+            "checks": null
+          },
+          {
+            "code": "jaw_reduction",
+            "name": "ตัดกราม",
+            "when": "เมื่อความกว้างเกิดจากกระดูกขากรรไกร",
+            "checks": null
+          }
+        ],
+        "procedures_withheld": [],
+        "notes": [
+          {
+            "code": "jaw_cause_unknown",
+            "text": "ความกว้างของกรามมาได้จากกล้ามเนื้อกราม กระดูกขากรรไกร หรือไขมัน ซึ่งภาพถ่ายแยกไม่ได้ ถ้าเกิดจากไขมันจะไม่ตรงกับทั้งสองแบบ และต้องคลำหรือเอกซเรย์ก่อนจึงจะรู้ว่าทางใดเหมาะ",
+            "with_procedures": true
+          }
+        ]
+      },
+      {
+        "region": "chin",
+        "status": "assessed",
+        "status_reasons": [],
+        "warnings": [],
+        "measurements": [
+          {
+            "name": "legan_angle",
+            "value": 22.0,
+            "unit": "deg",
+            "method": "measured",
+            "landmark_value": null,
+            "cutoffs": [
+              {
+                "value": 16.0,
+                "band": 1.5
+              },
+              {
+                "value": 20.0,
+                "band": 1.5
+              },
+              {
+                "value": 24.0,
+                "band": 1.5
+              }
+            ],
+            "reference": "ค่าปกติ 12° ช่วงที่ยอมรับได้ 8–16° แบ่งระดับทีละ 4°",
+            "source": "[5][26]"
+          }
+        ],
+        "overlay": {
+          "image": "profile",
+          "points": {
+            "g": [
+              720.0,
+              520.0
+            ],
+            "sn": [
+              736.0,
+              880.0
+            ],
+            "pog": [
+              706.0,
+              1190.0
+            ]
+          },
+          "lines": [
+            [
+              "g",
+              "sn"
+            ],
+            [
+              "sn",
+              "pog"
+            ]
+          ]
+        },
+        "probabilities": null,
+        "decision": {
+          "grade": "2",
+          "grade_range": null,
+          "level": "clear"
+        },
+        "procedures": [
+          {
+            "code": "chin_filler",
+            "name": "ฉีดฟิลเลอร์คาง",
+            "when": "รุกล้ำน้อยกว่า ใช้กับคางพร่องเล็กน้อย",
+            "checks": null
+          },
+          {
+            "code": "chin_implant",
+            "name": "เสริมคาง",
+            "when": "ให้ผลถาวรกว่าฟิลเลอร์",
+            "checks": null
+          },
+          {
+            "code": "genioplasty",
+            "name": "ตัดเลื่อนกระดูกคาง",
+            "when": "เมื่อคางสั้นหรือไม่สมมาตรร่วมด้วย หรือคางอยู่ด้านหลังมาก",
+            "checks": null
+          }
+        ],
+        "procedures_withheld": [],
+        "notes": [
+          {
+            "code": "chin_check_occlusion",
+            "text": "ควรตรวจการสบฟันก่อน เพราะคางถอยที่สัมพันธ์กับปัญหาการสบฟัน และคางที่สั้นในแนวตั้ง เป็นข้อห้ามของการเสริมด้วยแกน ขากรรไกรบนหรือฟันหน้าที่ยื่นทำให้มุมมากขึ้นได้แม้คางปกติ",
+            "with_procedures": true
+          }
+        ]
+      },
+      {
+        "region": "undereye_left",
+        "status": "assessed",
+        "status_reasons": [],
+        "warnings": [],
+        "measurements": [],
+        "overlay": {
+          "image": "frontal",
+          "points": {
+            "tl": [
+              684.0,
+              712.0
+            ],
+            "tr": [
+              756.0,
+              712.0
+            ],
+            "br": [
+              756.0,
+              784.0
+            ],
+            "bl": [
+              684.0,
+              784.0
+            ]
+          },
+          "lines": [
+            [
+              "tl",
+              "tr"
+            ],
+            [
+              "tr",
+              "br"
+            ],
+            [
+              "br",
+              "bl"
+            ],
+            [
+              "bl",
+              "tl"
+            ]
+          ]
+        },
+        "probabilities": {
+          "grades": {
+            "0": 0.08,
+            "1": 0.12,
+            "2+": 0.8
+          },
+          "at_least": {
+            "1": 0.92,
+            "2+": 0.8
+          }
+        },
+        "decision": {
+          "grade": "2+",
+          "grade_range": null,
+          "level": "clear"
+        },
+        "procedures": [],
+        "procedures_withheld": [
+          "age_21_or_under"
+        ],
+        "notes": [
+          {
+            "code": "undereye_scope",
+            "text": "ระบบประเมินเฉพาะร่องลึกใต้ตา ไม่ได้ประเมินถุงใต้ตาหรือรอยคล้ำ",
+            "with_procedures": false
+          }
+        ]
+      },
+      {
+        "region": "undereye_right",
+        "status": "assessed",
+        "status_reasons": [],
+        "warnings": [],
+        "measurements": [],
+        "overlay": {
+          "image": "frontal",
+          "points": {
+            "tl": [
+              524.0,
+              712.0
+            ],
+            "tr": [
+              596.0,
+              712.0
+            ],
+            "br": [
+              596.0,
+              784.0
+            ],
+            "bl": [
+              524.0,
+              784.0
+            ]
+          },
+          "lines": [
+            [
+              "tl",
+              "tr"
+            ],
+            [
+              "tr",
+              "br"
+            ],
+            [
+              "br",
+              "bl"
+            ],
+            [
+              "bl",
+              "tl"
+            ]
+          ]
+        },
+        "probabilities": {
+          "grades": {
+            "0": 0.05,
+            "1": 0.1,
+            "2+": 0.85
+          },
+          "at_least": {
+            "1": 0.95,
+            "2+": 0.85
+          }
+        },
+        "decision": {
+          "grade": "2+",
+          "grade_range": null,
+          "level": "clear"
+        },
+        "procedures": [],
+        "procedures_withheld": [
+          "age_21_or_under"
+        ],
+        "notes": [
+          {
+            "code": "undereye_scope",
+            "text": "ระบบประเมินเฉพาะร่องลึกใต้ตา ไม่ได้ประเมินถุงใต้ตาหรือรอยคล้ำ",
+            "with_procedures": false
+          }
+        ]
+      },
+      {
+        "region": "nose_base",
+        "status": "assessed",
+        "status_reasons": [],
+        "warnings": [],
+        "measurements": [
+          {
+            "name": "alar_intercanthal_ratio",
+            "value": 1.32,
+            "unit": "ratio",
+            "method": "model",
+            "landmark_value": 1.31,
+            "cutoffs": [
+              {
+                "value": 0.95,
+                "band": 0.04
+              },
+              {
+                "value": 1.15,
+                "band": 0.04
+              },
+              {
+                "value": 1.25,
+                "band": 0.04
+              }
+            ],
+            "reference": "หญิง เกรด 0 อยู่ที่ 0.95–1.15 เกรด ≥2 เมื่อมากกว่า 1.25",
+            "source": "[39]"
+          }
+        ],
+        "overlay": {
+          "image": "frontal",
+          "points": {
+            "al_l": [
+              590.0,
+              902.0
+            ],
+            "al_r": [
+              690.0,
+              903.0
+            ],
+            "en_l": [
+              600.0,
+              702.0
+            ],
+            "en_r": [
+              680.0,
+              702.0
+            ]
+          },
+          "lines": [
+            [
+              "al_l",
+              "al_r"
+            ],
+            [
+              "en_l",
+              "en_r"
+            ]
+          ]
+        },
+        "probabilities": null,
+        "decision": {
+          "grade": "2+",
+          "grade_range": null,
+          "level": "clear"
+        },
+        "procedures": [
+          {
+            "code": "alar_reduction",
+            "name": "ตัดปีกจมูก",
+            "when": "เมื่อฐานจมูกกว้างกว่าช่วงที่คนไทยชอบ",
+            "checks": null
+          }
+        ],
+        "procedures_withheld": [],
+        "notes": [
+          {
+            "code": "nose_base_indications",
+            "text": "ข้อบ่งชี้ของการตัดปีกจมูกมีหลายแบบ เช่นปีกจมูกบาน ระยะระหว่างปีกจมูกกว้าง หรือฐานรูจมูกกว้าง ซึ่งต้องดูจากภาพมุมใต้จมูก ภาพหน้าตรงแยกกรณีเหล่านี้ไม่ได้",
+            "with_procedures": true
+          }
+        ]
+      },
+      {
+        "region": "nose_dorsum",
+        "status": "assessed",
+        "status_reasons": [],
+        "warnings": [],
+        "measurements": [
+          {
+            "name": "nasofacial_angle",
+            "value": 28.0,
+            "unit": "deg",
+            "method": "measured",
+            "landmark_value": null,
+            "cutoffs": [
+              {
+                "value": 30.1,
+                "band": 1.35
+              },
+              {
+                "value": 32.8,
+                "band": 1.35
+              },
+              {
+                "value": 38.4,
+                "band": 1.5
+              }
+            ],
+            "reference": "หญิง เกรด 0 อยู่ที่ 32.8–38.4° เกรด ≥2 เมื่อน้อยกว่า 30.1°",
+            "source": "[39]"
+          }
+        ],
+        "overlay": {
+          "image": "profile",
+          "points": {
+            "g": [
+              720.0,
+              520.0
+            ],
+            "n": [
+              706.0,
+              610.0
+            ],
+            "prn": [
+              820.0,
+              830.0
+            ],
+            "pog": [
+              706.0,
+              1190.0
+            ]
+          },
+          "lines": [
+            [
+              "g",
+              "pog"
+            ],
+            [
+              "n",
+              "prn"
+            ]
+          ]
+        },
+        "probabilities": null,
+        "decision": {
+          "grade": "2+",
+          "grade_range": null,
+          "level": "clear"
+        },
+        "procedures": [
+          {
+            "code": "nose_filler",
+            "name": "ฉีดฟิลเลอร์จมูก",
+            "when": "รุกล้ำน้อยกว่าและมีการทดลองแบบสุ่มรองรับ",
+            "checks": null
+          },
+          {
+            "code": "rhinoplasty_implant",
+            "name": "เสริมจมูก",
+            "when": "การเสริมด้วยแกนให้ผลถาวรกว่า",
+            "checks": null
+          }
+        ],
+        "procedures_withheld": [],
+        "notes": [
+          {
+            "code": "nose_filler_vision_risk",
+            "text": "จมูกเป็นตำแหน่งที่มีรายงานการสูญเสียการมองเห็นหลังฉีดฟิลเลอร์มากที่สุด",
+            "with_procedures": true
+          }
+        ]
+      }
+    ],
+    "disclaimer": "ผลนี้เป็นการนำเกณฑ์จากงานวิจัยมาใช้กับค่าที่วัดจากภาพถ่าย ไม่ใช่การวินิจฉัย การตัดสินใจทำหัตถการต้องผ่านการตรวจโดยแพทย์"
+  }
+}

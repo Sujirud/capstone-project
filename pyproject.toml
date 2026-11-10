@@ -1,0 +1,58 @@
+[project]
+name = "facemeasure"
+version = "0.1.0"
+description = "Capstone prototype: surgery and procedure suggestions from face photos (measurement package, model scripts and api)"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy",
+    "scipy",
+    "pillow",
+    "pandas",
+    "matplotlib",
+    "tqdm",
+    "requests",
+    # Landmarks and features change between releases; never bump these on your own (api.md section 5)
+    "mediapipe==1.2.0",
+    "torch==2.15.0",
+    # Google Drive download of the FFHQ grading images; pinned because Drive handling changes between releases
+    "gdown==6.5.1",
+    "fastapi>=0.162.0",
+    "uvicorn>=0.54.0",
+    "python-multipart>=0.0.33",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest",
+    "ruff",
+    # Reference results the tests compare the package's ridge and kappa with
+    "scikit-learn",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.6,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv]
+# The prototype supports only macOS on Apple Silicon and Windows x64.
+# Torch from PyPI is the CPU build on Windows, so no extra index is needed.
+environments = [
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "sys_platform == 'win32' and platform_machine == 'AMD64'",
+]
+required-environments = [
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "sys_platform == 'win32' and platform_machine == 'AMD64'",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Model scripts are plain files, not a package; tests import them by name. "." makes the api package importable.
+pythonpath = [".", "model/scripts"]
+addopts = "-ra"
+
+[tool.ruff]
+# First-party code for import sorting: the api, the package and the model scripts tests import
+src = [".", "src", "model/scripts"]

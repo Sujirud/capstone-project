@@ -1,0 +1,1362 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เกรดร่องใต้ตา</title>
+<style>
+:root{
+  --bg:#1c1c1c; --bar:#171717; --stage:#3a3a3a; --panel:#232323; --card:#2c2c2c; --card2:#353535;
+  --line:#464646; --text:#ececec; --muted:#a6a6a6; --sel:#f2f2f2; --selfg:#141414;
+  --focus:#9cc3ff; --warn:#e8b54d; --ok:#a5d6a7; --danger:#f19a8f;
+  --font:system-ui,-apple-system,"Segoe UI","Leelawadee UI","Thonburi","Noto Sans Thai","Sarabun",Tahoma,sans-serif;
+  --mono:ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--text);font:15px/1.55 var(--font);display:flex;flex-direction:column;overflow:hidden}
+a{color:#cfe0ff}
+button,input{font:inherit;color:inherit}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+.topbar{display:flex;align-items:center;gap:14px;padding:8px 14px;background:var(--bar);border-bottom:1px solid var(--line);min-height:52px}
+.brand{font-weight:650;white-space:nowrap}
+.brand .sub{color:var(--muted);font-weight:400;font-size:13px;margin-left:8px}
+.tabs{display:flex;gap:4px;background:#222;border:1px solid var(--line);border-radius:9px;padding:3px}
+.tabs button{border:0;background:transparent;padding:4px 12px;border-radius:7px;cursor:pointer;color:var(--muted)}
+.tabs button[aria-selected=true]{background:var(--card2);color:var(--text)}
+.status{flex:1;min-width:0;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status b{color:var(--text);font-weight:600}
+.warn{color:var(--warn)}
+.actions{display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:6px 14px;border-radius:8px;border:1px solid var(--line);background:var(--card2);cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:#6a6a6a}
+.btn.primary{background:var(--sel);color:var(--selfg);border-color:var(--sel);font-weight:600}
+.btn.ghost{background:transparent}
+.btn.small{min-height:30px;padding:4px 10px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:default}
+.menu{position:relative}
+.menu summary{list-style:none}
+.menu summary::-webkit-details-marker{display:none}
+.menu-items{position:absolute;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;display:flex;flex-direction:column;min-width:250px;z-index:20;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+.menu-items button{background:transparent;border:0;text-align:left;padding:8px 10px;border-radius:7px;cursor:pointer}
+.menu-items button:hover{background:var(--card2)}
+.danger{color:var(--danger)}
+
+main{flex:1;min-height:0;display:flex}
+main>section{flex:1;min-height:0;display:flex}
+.page{flex:1;overflow:auto;padding:28px 20px}
+.card{max-width:760px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px 28px}
+.card.wide{max-width:1120px}
+h1{font-size:22px;margin:0 0 6px}
+h2{font-size:17px;margin:24px 0 8px}
+.lead{color:var(--muted);margin:0 0 18px}
+.warnbox{background:#3d3220;border:1px solid #6b5326;color:#ffe0a3;border-radius:10px;padding:10px 12px;margin:0 0 16px;font-size:14px}
+.steps{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px}
+.label,.steps label{display:block;font-weight:600;margin-bottom:6px}
+.text{width:100%;max-width:360px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:#1b1b1b}
+.note{font-size:13px;color:var(--muted);margin-top:6px;min-height:1.2em}
+.note.bad{color:var(--danger)}
+.drop{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px;border:1px dashed #5a5a5a;border-radius:10px}
+.drop.over{border-color:var(--sel);background:#2a2a2a}
+.check{margin:0;padding-left:20px;color:#d6d6d6;font-size:14px}
+.check li{margin:4px 0}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;align-items:center}
+.muted{color:var(--muted)}
+
+.workspace{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 380px}
+.stage{position:relative;overflow:hidden;background:var(--stage);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.stage.dragging{cursor:grabbing}
+.stage img{position:absolute;left:0;top:0;transform-origin:0 0;max-width:none;max-height:none;will-change:transform;-webkit-user-drag:none;pointer-events:none}
+.sidelabel{position:absolute;top:10px;padding:3px 10px;border-radius:999px;background:rgba(0,0,0,.55);color:#b5b5b5;font-size:13px;pointer-events:none}
+.sidelabel.l{left:10px}.sidelabel.r{right:10px}
+.sidelabel.on{color:#fff;box-shadow:0 0 0 1.5px #fff inset}
+.stagemsg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;text-align:center;color:#eee;pointer-events:none}
+.zoombar{position:absolute;left:10px;bottom:10px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:rgba(18,18,18,.82);padding:6px;border-radius:10px;cursor:default}
+.zb{min-width:34px;height:32px;border-radius:7px;border:1px solid var(--line);background:var(--card2);cursor:pointer;padding:0 10px}
+.zread{min-width:44px;text-align:center;font-variant-numeric:tabular-nums;font-size:13px;color:#d0d0d0}
+.zkeep{display:flex;gap:6px;align-items:center;font-size:13px;color:#cfcfcf;padding:0 4px;cursor:pointer}
+
+.panel{background:var(--panel);border-left:1px solid var(--line);overflow:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+.ptext{display:flex;justify-content:space-between;font-size:14px}
+.ptext span:last-child{color:var(--muted)}
+.pbar{height:6px;background:#3a3a3a;border-radius:99px;overflow:hidden;margin-top:6px}
+.pbar div{height:100%;width:0;background:#d9d9d9}
+.sides{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.side{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px;cursor:pointer}
+.side.active{border-color:var(--sel);box-shadow:0 0 0 1px var(--sel) inset}
+.side-head{display:flex;flex-direction:column;line-height:1.3;margin-bottom:2px}
+.side-title{font-weight:650}
+.side-sub{font-size:12.5px;color:var(--muted)}
+.state{font-size:12px;color:var(--ok);min-height:1.3em}
+.gbtn{display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:4px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card2);cursor:pointer;text-align:left}
+.gbtn .n{font-size:19px;font-weight:700;width:14px;text-align:center;font-variant-numeric:tabular-nums}
+.gbtn .t{font-size:14px}
+.gbtn[aria-pressed=true]{background:var(--sel);color:var(--selfg);border-color:var(--sel)}
+.nabtn{min-height:32px;border-radius:8px;border:1px dashed #5f5f5f;background:transparent;cursor:pointer;font-size:13px}
+.nabtn[aria-pressed=true]{background:#4f4126;border:1px solid var(--warn);color:#ffe2a8}
+.flag{display:flex;gap:7px;align-items:center;font-size:13px;color:#cfcfcf;cursor:pointer}
+.flag input{width:16px;height:16px;margin:0;accent-color:#e0e0e0}
+.side.flash{animation:flash .5s ease-in-out 3}
+@keyframes flash{50%{border-color:var(--warn);box-shadow:0 0 0 2px var(--warn) inset}}
+.notefield{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.notefield input{padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:#1b1b1b;color:var(--text)}
+.nav{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hint{min-height:1.4em;font-size:13px;color:var(--warn)}
+.keys{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--line);padding-top:10px}
+kbd{display:inline-block;min-width:20px;padding:0 5px;border:1px solid #5a5a5a;border-bottom-width:2px;border-radius:5px;font:12px/18px var(--mono);text-align:center;color:#ddd;background:#2a2a2a;margin-right:2px}
+.fname{font:12px var(--mono);color:#8d8d8d;word-break:break-all;margin-top:6px}
+
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:10px;max-height:520px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:7px 10px;border-bottom:1px solid #3a3a3a;text-align:left;white-space:nowrap}
+th{background:#2a2a2a;font-weight:600;position:sticky;top:0;z-index:1}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+tbody tr:last-child td{border-bottom:0}
+.good{color:var(--ok)}
+.pill{display:inline-block;padding:0 7px;border-radius:99px;background:#3a3a3a;font-size:12px;color:#d0d0d0;margin-left:4px}
+.kpis{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0}
+.kpis div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:150px}
+.kpis b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.kpis span{font-size:13px;color:var(--muted)}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.62);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 26px;max-width:660px;width:100%;max-height:92vh;overflow:auto}
+.modal-card.wide{max-width:1100px;display:flex;flex-direction:column;gap:12px}
+.modal-card h2{margin-top:0}
+.modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.modal-head h2{margin:0;font-size:16px;word-break:break-all}
+.stage.small{height:64vh;border-radius:10px}
+.keytable td{white-space:normal;padding:5px 8px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#f2f2f2;color:#141414;padding:10px 16px;border-radius:10px;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:60;max-width:90vw}
+.toast.show{opacity:1}
+@media (max-width:900px){
+  body{overflow:auto}
+  .workspace{grid-template-columns:1fr;grid-template-rows:60vh auto}
+  .panel{border-left:0;border-top:1px solid var(--line)}
+  .status{display:none}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">เกรดร่องใต้ตา<span class="sub">GIHS 0–3</span></div>
+  <div class="tabs" role="tablist" aria-label="โหมด">
+    <button type="button" role="tab" id="tabbtn-grade" aria-controls="tab-grade" aria-selected="true">ให้เกรด</button>
+    <button type="button" role="tab" id="tabbtn-summary" aria-controls="tab-summary" aria-selected="false">สรุปผลหลายคน</button>
+  </div>
+  <div class="status" id="status"></div>
+  <div class="actions" id="gradeActions" hidden>
+    <button type="button" class="btn" id="btnExport">ส่งออก CSV</button>
+    <details class="menu" id="menu">
+      <summary class="btn">เพิ่มเติม</summary>
+      <div class="menu-items">
+        <button type="button" id="mHelp">วิธีให้เกรดและปุ่มลัด</button>
+        <button type="button" id="mImport">นำเข้า CSV เพื่อทำต่อ</button>
+        <button type="button" id="mSetup">เปลี่ยนชื่อหรือชุดภาพ</button>
+        <button type="button" id="mReset" class="danger">ล้างผลของชื่อนี้ในเครื่องนี้</button>
+      </div>
+    </details>
+  </div>
+</header>
+
+<input type="file" id="inDir" webkitdirectory multiple hidden>
+<input type="file" id="inFiles" accept="image/jpeg,image/png,image/webp" multiple hidden>
+<input type="file" id="inImport" accept=".csv,text/csv" hidden>
+<input type="file" id="inSumCsv" accept=".csv,text/csv" multiple hidden>
+<input type="file" id="inSumDir" webkitdirectory multiple hidden>
+
+<main>
+<section id="tab-grade" role="tabpanel" aria-labelledby="tabbtn-grade">
+  <div class="page" id="setup">
+    <div class="card">
+      <h1>เกรดร่องใต้ตาทีละข้าง</h1>
+      <p class="lead">ให้เกรดความลึกของร่องใต้ตาตามสเกล GIHS 0–3 ของตาแต่ละข้าง ภาพเปิดจากเครื่องนี้เท่านั้นและไม่ถูกส่งไปที่ใด เครื่องมือบันทึกเฉพาะเกรดไว้ในเบราว์เซอร์นี้</p>
+      <div class="warnbox" id="storageWarn" hidden>เบราว์เซอร์นี้บันทึกความคืบหน้าอัตโนมัติไม่ได้ ใช้ Chrome หรือ Edge แทน หรือกดส่งออก CSV เป็นระยะ แล้วใช้ “นำเข้า CSV เพื่อทำต่อ” เมื่อเปิดใหม่</div>
+      <ol class="steps">
+        <li>
+          <label for="raterName">1. ชื่อผู้ให้เกรด</label>
+          <input id="raterName" class="text" autocomplete="off" maxlength="40" placeholder="ใช้ชื่อเดิมทุกครั้ง และไม่ซ้ำกับเพื่อน">
+          <div class="note" id="raterNote"></div>
+        </li>
+        <li>
+          <div class="label">2. ภาพที่จะเกรด</div>
+          <div class="drop" id="drop">
+            <button type="button" class="btn" id="btnPickDir">เลือกโฟลเดอร์ภาพ</button>
+            <button type="button" class="btn ghost" id="btnPickFiles">เลือกไฟล์ภาพ</button>
+            <span class="muted">หรือลากโฟลเดอร์มาวางตรงนี้</span>
+          </div>
+          <div class="note" id="setNote"></div>
+        </li>
+        <li>
+          <div class="label">3. ก่อนเริ่ม</div>
+          <ul class="check">
+            <li>ปิดโหมดถนอมสายตาของจอ เช่น Night Shift, Night Light หรือ True Tone และตั้งความสว่างตามปกติ เพราะสีจอเปลี่ยนการเห็นเงาใต้ตา</li>
+            <li>เปิดภาพอ้างอิง GIHS จาก Figure 2 ของ <a href="https://doi.org/10.1097/DSS.0000000000002269" target="_blank" rel="noopener">Moradi et al. 2020</a> ไว้ข้างกัน ในหน้าบทความให้กดปุ่ม “PDF” ทางซ้ายหรือลิงก์ “Download PDF” แล้วเปิดหน้า 3 ซึ่งภาพชัดกว่าบนหน้าเว็บ</li>
+            <li>เกรดเฉพาะความลึกของร่องใต้ตา ไม่นับถุงใต้ตาและรอยคล้ำ ถ้าเด่นให้ติ๊กไว้</li>
+            <li>เกรดคนเดียว ไม่คุยเกรดกับเพื่อนจนกว่าทุกคนจะเกรดเสร็จ</li>
+          </ul>
+        </li>
+      </ol>
+      <div class="row">
+        <button type="button" class="btn primary" id="btnStart" disabled>เริ่มเกรด</button>
+        <button type="button" class="btn ghost" id="btnImport">นำเข้า CSV เพื่อทำต่อ</button>
+        <button type="button" class="btn ghost" id="btnHelp">วิธีให้เกรดและปุ่มลัด</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="workspace" id="workspace" hidden>
+    <div class="stage" id="stage">
+      <img id="photo" alt="ภาพที่กำลังเกรด" draggable="false">
+      <div class="stagemsg" id="stageMsg" hidden></div>
+      <div class="sidelabel l" id="lblL">◀ ซ้ายของภาพ · ตาขวาของคน</div>
+      <div class="sidelabel r" id="lblR">ขวาของภาพ · ตาซ้ายของคน ▶</div>
+      <div class="zoombar">
+        <button type="button" class="zb" id="zOut" aria-label="ซูมออก">−</button>
+        <span class="zread" id="zRead">×1.0</span>
+        <button type="button" class="zb" id="zIn" aria-label="ซูมเข้า">+</button>
+        <button type="button" class="zb" id="zFit">พอดีจอ</button>
+        <button type="button" class="zb" id="zEye">ช่วงตา</button>
+        <label class="zkeep"><input type="checkbox" id="keepZoom">คงซูมเมื่อเปลี่ยนภาพ</label>
+      </div>
+    </div>
+    <aside class="panel" aria-label="ให้เกรด">
+      <div>
+        <div class="ptext"><span id="posText"></span><span id="doneText"></span></div>
+        <div class="pbar"><div id="pfill"></div></div>
+        <div class="fname" id="fname"></div>
+      </div>
+      <div class="sides" id="sides"></div>
+      <label class="notefield">หมายเหตุ (ไม่บังคับ)<input id="noteInput" maxlength="200" placeholder="เช่น ผมบังบางส่วน"></label>
+      <div class="nav">
+        <button type="button" class="btn" id="btnPrev">← ก่อนหน้า</button>
+        <button type="button" class="btn primary" id="btnNext">ถัดไป →</button>
+      </div>
+      <button type="button" class="btn ghost small" id="btnJump">ข้ามไปภาพที่ยังไม่ครบ</button>
+      <div class="hint" id="hint" aria-live="polite"></div>
+      <div class="keys">
+        <div><kbd>←</kbd><kbd>→</kbd> เลือกด้าน · <kbd>0</kbd>–<kbd>3</kbd> เกรด</div>
+        <div><kbd>X</kbd> ประเมินไม่ได้ · <kbd>B</kbd> ถุงใต้ตา · <kbd>D</kbd> รอยคล้ำ</div>
+        <div><kbd>Enter</kbd> ถัดไป · <kbd>Shift</kbd>+<kbd>Enter</kbd> ก่อนหน้า</div>
+        <div><kbd>Z</kbd> ช่วงตาหรือพอดีจอ · <kbd>?</kbd> วิธีใช้</div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section id="tab-summary" role="tabpanel" aria-labelledby="tabbtn-summary" hidden>
+  <div class="page">
+    <div class="card wide">
+      <h1>สรุปผลหลายคน</h1>
+      <p class="lead">ใช้หลังทุกคนเกรดชุดเดียวกันเสร็จแล้ว เลือกไฟล์ CSV ของทุกคนพร้อมกัน แล้วดูสัดส่วนเกรด ความสอดคล้องระหว่างผู้ให้เกรด และข้างที่เห็นต่าง</p>
+      <div class="row" style="margin-top:0">
+        <button type="button" class="btn primary" id="btnSumCsv">เลือกไฟล์ CSV</button>
+        <button type="button" class="btn ghost" id="btnSumDir">เลือกโฟลเดอร์ภาพเพื่อเปิดดูข้างที่เห็นต่าง</button>
+        <button type="button" class="btn ghost" id="btnSumClear">ล้าง</button>
+      </div>
+      <div class="note" id="sumNote"></div>
+      <div id="sumOut"></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<div class="modal" id="helpModal" hidden role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="modal-card">
+    <h2 id="helpTitle">วิธีให้เกรด</h2>
+    <ul class="check">
+      <li><b>เกรดอะไร</b> ความลึกของร่องใต้ตาของตาแต่ละข้างตามสเกล GIHS คือ 0 ไม่มี · 1 น้อย · 2 ปานกลาง · 3 มาก เทียบกับภาพอ้างอิงใน Figure 2 ของ <a href="https://doi.org/10.1097/DSS.0000000000002269" target="_blank" rel="noopener">Moradi et al. 2020</a> ใช้ไฟล์ PDF ของบทความ หน้า 3 ซึ่งชัดกว่าภาพบนหน้าเว็บ</li>
+      <li><b>ไม่นับถุงใต้ตาและรอยคล้ำ</b> ถ้าเด่นให้ติ๊กไว้ แล้วยังเกรดร่องตามที่เห็น</li>
+      <li><b>ประเมินไม่ได้</b> ใช้เมื่อมีสิ่งบังใต้ตา ตาปิด แสงจ้าหรือมืดจนไม่เห็นรายละเอียด หรือภาพเบลอ</li>
+      <li><b>ด้าน</b> การ์ดซ้ายคือด้านซ้ายของภาพ ซึ่งเป็นตาขวาของคนในภาพ</li>
+      <li><b>ซูม</b> หมุนล้อเมาส์หรือใช้สองนิ้วบนทัชแพด ลากเพื่อเลื่อน ดับเบิลคลิกเพื่อซูมหรือกลับพอดีจอ</li>
+      <li><b>การบันทึก</b> เกรดถูกบันทึกในเบราว์เซอร์นี้ทุกครั้งที่กด ภาพไม่ถูกบันทึกหรือส่งไปที่ใด ถ้าปิดไปแล้ว ให้เปิดไฟล์นี้ ใส่ชื่อเดิม และเลือกโฟลเดอร์เดิมเพื่อทำต่อ และส่งออก CSV สำรองเป็นระยะ</li>
+      <li><b>เมื่อเสร็จ</b> ส่งออก CSV ส่งให้ทีม แล้วลบโฟลเดอร์ภาพออกจากเครื่อง</li>
+    </ul>
+    <h2>ปุ่มลัด</h2>
+    <table class="keytable"><tbody>
+      <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>เลือกด้านซ้ายหรือขวาของภาพ</td></tr>
+      <tr><td><kbd>0</kbd> <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></td><td>ให้เกรดด้านที่เลือก แล้วเลื่อนไปอีกด้านถ้ายังไม่ได้เกรด</td></tr>
+      <tr><td><kbd>X</kbd></td><td>ประเมินไม่ได้ กดอีกครั้งเพื่อยกเลิก</td></tr>
+      <tr><td><kbd>B</kbd> <kbd>D</kbd></td><td>ติ๊กถุงใต้ตาเด่น หรือรอยคล้ำเด่น</td></tr>
+      <tr><td><kbd>Enter</kbd></td><td>ภาพถัดไป ถ้ายังเกรดไม่ครบต้องกดซ้ำเพื่อข้าม</td></tr>
+      <tr><td><kbd>Shift</kbd>+<kbd>Enter</kbd></td><td>ภาพก่อนหน้า</td></tr>
+      <tr><td><kbd>Z</kbd> <kbd>F</kbd> <kbd>+</kbd> <kbd>−</kbd></td><td>ซูมช่วงตา พอดีจอ ซูมเข้า ซูมออก</td></tr>
+    </tbody></table>
+    <p class="muted" style="font-size:13px">ปุ่มลัดใช้ได้ทั้งตอนแป้นพิมพ์เป็นภาษาไทยและอังกฤษ</p>
+    <div class="row"><button type="button" class="btn primary" data-close data-autofocus>เข้าใจแล้ว</button></div>
+  </div>
+</div>
+
+<div class="modal" id="doneModal" hidden role="dialog" aria-modal="true" aria-labelledby="doneTitle">
+  <div class="modal-card">
+    <h2 id="doneTitle">เกรดครบ <span id="doneCount"></span> ภาพแล้ว</h2>
+    <ol class="check">
+      <li>กดส่งออก CSV</li>
+      <li>ส่งไฟล์ CSV ให้ทีมตามที่ส่งออกมา ไม่ต้องเปิดแก้ใน Excel</li>
+      <li>ลบโฟลเดอร์ภาพออกจากเครื่องนี้</li>
+    </ol>
+    <div class="row"><button type="button" class="btn primary" id="btnExport2" data-autofocus>ส่งออก CSV</button><button type="button" class="btn ghost" data-close>กลับไปดูภาพ</button></div>
+  </div>
+</div>
+
+<div class="modal" id="viewModal" hidden role="dialog" aria-modal="true" aria-labelledby="viewTitle">
+  <div class="modal-card wide">
+    <div class="modal-head"><h2 id="viewTitle"></h2><button type="button" class="btn ghost" data-close data-autofocus>ปิด</button></div>
+    <div class="stage small" id="stage2">
+      <img id="photo2" alt="ภาพที่เห็นต่าง" draggable="false">
+      <div class="sidelabel l" id="lbl2L">◀ ซ้ายของภาพ · ตาขวาของคน</div>
+      <div class="sidelabel r" id="lbl2R">ขวาของภาพ · ตาซ้ายของคน ▶</div>
+    </div>
+    <div id="viewInfo"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- constants ---------- */
+const GRADES = [[0, 'ไม่มี'], [1, 'น้อย'], [2, 'ปานกลาง'], [3, 'มาก']];
+// key = ข้างของคนในภาพ, img = ข้างของภาพ
+const SIDES = [
+  { key: 'right', img: 'left', title: 'ซ้ายของภาพ', sub: 'ตาขวาของคนในภาพ' },
+  { key: 'left', img: 'right', title: 'ขวาของภาพ', sub: 'ตาซ้ายของคนในภาพ' },
+];
+const SIDE = { right: SIDES[0], left: SIDES[1] };
+const OTHER = { right: 'left', left: 'right' };
+const IMG_RE = /\.(jpe?g|png|webp)$/i;
+const PREFIX = 'undereye-grader/v1/';
+const UI_KEY = 'undereye-grader/ui';
+const VISIT_CAP_S = 120;
+const REMIND_EVERY = 50;
+const SKIP_WINDOW_MS = 3000;
+const KAPPA_TARGET = 0.61;
+const CSV_COLS = ['rater', 'set_id', 'image', 'person_side', 'image_side', 'grade', 'unassessable',
+  'eye_bags', 'dark_circles', 'note', 'seconds', 'seq', 'graded_at'];
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const normName = s => String(s || '').trim().replace(/\s+/g, ' ');
+const nameKey = s => normName(s).toLowerCase();
+const blankSide = () => ({ g: null, na: false, bags: false, dark: false });
+const sideDone = r => !!r && (r.na === true || Number.isInteger(r.g));
+const isDone = rec => !!rec && sideDone(rec.right) && sideDone(rec.left);
+const byStr = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+const safeText = s => (/^[=+\-@\t\r]/.test(s) ? "'" + s : s);
+const unsafe = s => (/^'[=+\-@]/.test(s) ? s.slice(1) : s);
+const fmt = (x, d = 2) => (Number.isFinite(x) ? x.toFixed(d) : '–');
+const pct = (c, n) => (n ? `${Math.round((100 * c) / n)}%` : '–');
+const newData = name => ({ v: 1, rater: name, grades: {}, lastExport: null, sinceExport: 0 });
+
+function cyrb53(str, seed = 0) {
+  let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+  for (let i = 0; i < str.length; i++) {
+    const ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
+  h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
+  h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+}
+
+let toastTimer = 0;
+function toast(msg, ms = 3200) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), ms);
+}
+const hint = msg => { $('hint').textContent = msg; };
+
+/* ---------- storage (เก็บเฉพาะเกรด ไม่เก็บภาพ) ---------- */
+const mem = {};
+const store = {
+  ok: true,
+  get(k) {
+    if (k in mem) return JSON.parse(mem[k]);
+    try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; }
+  },
+  set(k, v) {
+    const s = JSON.stringify(v);
+    mem[k] = s;
+    try { localStorage.setItem(k, s); this.ok = true; } catch (e) { this.ok = false; }
+    return this.ok;
+  },
+  del(k) { delete mem[k]; try { localStorage.removeItem(k); } catch (e) { /* ignore */ } },
+};
+try { localStorage.setItem(PREFIX + '_probe', '1'); localStorage.removeItem(PREFIX + '_probe'); } catch (e) { store.ok = false; }
+
+const ui = Object.assign({ keepZoom: true, rel: null, lastRater: '' }, store.get(UI_KEY) || {});
+let uiTimer = 0;
+const saveUI = () => { clearTimeout(uiTimer); uiTimer = setTimeout(() => store.set(UI_KEY, ui), 300); };
+
+/* ---------- state ---------- */
+const S = {
+  files: new Map(), keys: [], setId: '',
+  rkey: '', data: null, order: [], idx: 0,
+  active: 'right', visitStart: 0, skipAt: -Infinity, doneShown: false,
+};
+const curKey = () => S.order[S.idx];
+const countDone = () => S.order.reduce((n, k) => n + (isDone(S.data.grades[k]) ? 1 : 0), 0);
+const gradingActive = () => !!S.data && !$('workspace').hidden && !$('tab-grade').hidden;
+const save = () => { if (S.data) { store.set(PREFIX + S.rkey, S.data); renderStatus(); } };
+
+/* ---------- object URLs ---------- */
+const urlCache = new Map();
+function urlFor(key, files, ns) {
+  const id = ns + key;
+  let u = urlCache.get(id);
+  if (u) urlCache.delete(id);
+  else u = URL.createObjectURL(files.get(key));
+  urlCache.set(id, u);
+  while (urlCache.size > 8) {
+    const [oldId, oldU] = urlCache.entries().next().value;
+    urlCache.delete(oldId);
+    URL.revokeObjectURL(oldU);
+  }
+  return u;
+}
+function dropUrls(ns) {
+  for (const [id, u] of [...urlCache]) if (id.startsWith(ns)) { URL.revokeObjectURL(u); urlCache.delete(id); }
+}
+
+/* ---------- zoom and pan ---------- */
+class ZoomView {
+  constructor(stage, img, opts = {}) {
+    this.stage = stage; this.img = img; this.opts = opts;
+    this.s = 1; this.tx = 0; this.ty = 0; this.fitS = 1; this.rel = null; this.drag = null;
+    stage.addEventListener('wheel', e => {
+      if (!this.ready()) return;
+      e.preventDefault();
+      const r = stage.getBoundingClientRect();
+      const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+      this.zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-dy * 0.0016));
+    }, { passive: false });
+    stage.addEventListener('pointerdown', e => {
+      if (e.button !== 0 || !this.ready() || e.target.closest('.zoombar')) return;
+      this.drag = { x: e.clientX, y: e.clientY, tx: this.tx, ty: this.ty };
+      stage.setPointerCapture(e.pointerId);
+      stage.classList.add('dragging');
+    });
+    stage.addEventListener('pointermove', e => {
+      if (!this.drag) return;
+      this.tx = this.drag.tx + e.clientX - this.drag.x;
+      this.ty = this.drag.ty + e.clientY - this.drag.y;
+      this.clampPan(); this.apply();
+    });
+    const end = () => { this.drag = null; stage.classList.remove('dragging'); };
+    stage.addEventListener('pointerup', end);
+    stage.addEventListener('pointercancel', end);
+    stage.addEventListener('dblclick', e => {
+      if (!this.ready() || e.target.closest('.zoombar')) return;
+      const r = stage.getBoundingClientRect();
+      if (this.zoomed()) this.fit(); else this.zoomAt(e.clientX - r.left, e.clientY - r.top, 2.5);
+    });
+    img.addEventListener('load', () => { if (this.ready()) (opts.onLoad ? opts.onLoad(this) : this.fit()); });
+    new ResizeObserver(() => { if (this.ready() && this.rel) this.setRel(this.rel); }).observe(stage);
+  }
+  ready() { return this.img.naturalWidth > 0 && this.stage.clientWidth > 0 && this.stage.clientHeight > 0; }
+  size() { return [this.stage.clientWidth, this.stage.clientHeight]; }
+  zoomed() { return this.s > this.fitS * 1.05; }
+  fit() { this.setRel({ z: 1, cx: 0.5, cy: 0.5 }); }
+  eye() { this.setRel({ z: 2.2, cx: 0.5, cy: 0.5 }); }
+  zoomBy(f) { if (!this.ready()) return; const [cw, ch] = this.size(); this.zoomAt(cw / 2, ch / 2, f); }
+  zoomAt(mx, my, f) {
+    const ns = clamp(this.s * f, this.fitS, this.fitS * 8);
+    const k = ns / this.s;
+    this.tx = mx - (mx - this.tx) * k;
+    this.ty = my - (my - this.ty) * k;
+    this.s = ns;
+    this.clampPan(); this.apply();
+  }
+  clampPan() {
+    const [cw, ch] = this.size();
+    const w = this.img.naturalWidth * this.s, h = this.img.naturalHeight * this.s;
+    this.tx = w <= cw ? (cw - w) / 2 : clamp(this.tx, cw - w, 0);
+    this.ty = h <= ch ? (ch - h) / 2 : clamp(this.ty, ch - h, 0);
+  }
+  setRel(rel) {
+    if (!this.ready()) return;
+    const [cw, ch] = this.size();
+    const iw = this.img.naturalWidth, ih = this.img.naturalHeight;
+    this.fitS = Math.min(cw / iw, ch / ih) * 0.97;
+    this.s = clamp(this.fitS * (rel.z || 1), this.fitS, this.fitS * 8);
+    this.tx = cw / 2 - (Number.isFinite(rel.cx) ? rel.cx : 0.5) * this.s * iw;
+    this.ty = ch / 2 - (Number.isFinite(rel.cy) ? rel.cy : 0.5) * this.s * ih;
+    this.clampPan(); this.apply();
+  }
+  apply() {
+    this.img.style.transform = `translate(${this.tx}px, ${this.ty}px) scale(${this.s})`;
+    const [cw, ch] = this.size();
+    this.rel = {
+      z: this.s / this.fitS,
+      cx: (cw / 2 - this.tx) / (this.s * this.img.naturalWidth),
+      cy: (ch / 2 - this.ty) / (this.s * this.img.naturalHeight),
+    };
+    if (this.opts.onChange) this.opts.onChange(this);
+  }
+}
+
+const view = new ZoomView($('stage'), $('photo'), {
+  onLoad: v => { if (ui.keepZoom && ui.rel) v.setRel(ui.rel); else v.fit(); },
+  onChange: v => { $('zRead').textContent = '×' + v.rel.z.toFixed(1); ui.rel = v.rel; saveUI(); },
+});
+const view2 = new ZoomView($('stage2'), $('photo2'), { onLoad: v => v.eye() });
+
+/* ---------- loading images ---------- */
+function collectImages(list) {
+  const map = new Map(), dups = new Set();
+  for (const f of list) {
+    if (!IMG_RE.test(f.name) || f.name.startsWith('.')) continue;
+    if (map.has(f.name)) dups.add(f.name); else map.set(f.name, f);
+  }
+  return { map, dups: [...dups] };
+}
+
+async function filesFromDrop(dt) {
+  // ต้องเรียก webkitGetAsEntry ทันทีในอีเวนต์ drop
+  const entries = [...(dt.items || [])].map(it => (it.webkitGetAsEntry ? it.webkitGetAsEntry() : null)).filter(Boolean);
+  if (!entries.length) return [...dt.files];
+  const out = [];
+  const walk = async entry => {
+    if (entry.isFile) { out.push(await new Promise((res, rej) => entry.file(res, rej))); return; }
+    if (!entry.isDirectory) return;
+    const reader = entry.createReader();
+    for (;;) {
+      const batch = await new Promise((res, rej) => reader.readEntries(res, rej));
+      if (!batch.length) break;
+      for (const e of batch) await walk(e);
+    }
+  };
+  for (const e of entries) await walk(e);
+  return out;
+}
+
+function setGradingImages(list) {
+  const { map, dups } = collectImages(list);
+  const note = $('setNote');
+  if (!map.size) { note.className = 'note bad'; note.textContent = 'ไม่พบไฟล์ภาพ .jpg .png หรือ .webp'; return; }
+  if (dups.length) {
+    note.className = 'note bad';
+    note.textContent = `มีชื่อไฟล์ซ้ำกัน ${dups.length} ชื่อ เช่น ${dups.slice(0, 3).join(', ')} ให้ทุกภาพมีชื่อไม่ซ้ำแล้วเลือกใหม่`;
+    return;
+  }
+  S.files = map;
+  S.keys = [...map.keys()].sort(byStr);
+  S.setId = cyrb53(S.keys.join('\n')).toString(36).toUpperCase().padStart(6, '0').slice(-6);
+  dropUrls('g:');
+  updateSetup();
+}
+
+/* ---------- setup screen ---------- */
+function updateSetup() {
+  const name = normName($('raterName').value);
+  const has = S.keys.length > 0;
+  if (has) {
+    $('setNote').className = 'note';
+    $('setNote').innerHTML = `พบ ${S.keys.length} ภาพ · รหัสชุด <b>${S.setId}</b> · รหัสชุดของทุกคนต้องตรงกัน`;
+  }
+  const prev = name ? store.get(PREFIX + nameKey(name)) : null;
+  const nPrev = prev && prev.grades ? Object.keys(prev.grades).length : 0;
+  if (!name) $('raterNote').textContent = '';
+  else if (nPrev) {
+    $('raterNote').textContent = has
+      ? `มีผลเดิมของชื่อนี้ในเครื่องนี้ · ครบแล้ว ${S.keys.filter(k => isDone(prev.grades[k])).length} จาก ${S.keys.length} ภาพในชุดนี้`
+      : `มีผลเดิมของชื่อนี้ในเครื่องนี้ ${nPrev} ภาพ`;
+  } else $('raterNote').textContent = 'ยังไม่มีผลของชื่อนี้ในเครื่องนี้ จะเริ่มใหม่';
+  $('btnStart').disabled = !(name && has);
+  $('btnStart').textContent = nPrev ? 'ทำต่อจากเดิม' : 'เริ่มเกรด';
+}
+
+function start() {
+  const name = normName($('raterName').value);
+  if (!name || !S.keys.length) return;
+  S.rkey = nameKey(name);
+  S.data = store.get(PREFIX + S.rkey) || newData(name);
+  S.data.grades = S.data.grades || {};
+  ui.lastRater = name; saveUI();
+  // ลำดับสุ่มของแต่ละคน: เรียงตาม hash ของชื่อกับชื่อไฟล์ จึงได้ลำดับเดิมทุกครั้งที่เปิด
+  const h = new Map(S.keys.map(k => [k, cyrb53(S.rkey + '|' + k)]));
+  S.order = S.keys.slice().sort((a, b) => (h.get(a) - h.get(b)) || byStr(a, b));
+  S.doneShown = false;
+  $('setup').hidden = true;
+  $('workspace').hidden = false;
+  $('gradeActions').hidden = false;
+  const first = S.order.findIndex(k => !isDone(S.data.grades[k]));
+  showImage(first < 0 ? 0 : first);
+  if (first < 0) { S.doneShown = true; openDone(); }
+}
+
+function backToSetup() {
+  commitTime();
+  save();
+  S.data = null;
+  $('workspace').hidden = true;
+  $('gradeActions').hidden = true;
+  $('setup').hidden = false;
+  updateSetup();
+  renderStatus();
+}
+
+/* ---------- grading ---------- */
+const cards = {};
+function buildCards() {
+  for (const sd of SIDES) {
+    const el = document.createElement('div');
+    el.className = 'side';
+    el.setAttribute('role', 'group');
+    el.setAttribute('aria-label', `${sd.title} ${sd.sub}`);
+    el.innerHTML =
+      `<div class="side-head"><span class="side-title">${sd.title}</span><span class="side-sub">${sd.sub}</span><span class="state"></span></div>` +
+      GRADES.map(([g, t]) => `<button type="button" class="gbtn" data-g="${g}" aria-pressed="false"><span class="n">${g}</span><span class="t">${t}</span></button>`).join('') +
+      '<button type="button" class="nabtn" aria-pressed="false">ประเมินไม่ได้</button>' +
+      '<label class="flag"><input type="checkbox" data-flag="bags">ถุงใต้ตาเด่น</label>' +
+      '<label class="flag"><input type="checkbox" data-flag="dark">รอยคล้ำเด่น</label>';
+    $('sides').appendChild(el);
+    const c = {
+      el, g: [...el.querySelectorAll('.gbtn')], na: el.querySelector('.nabtn'),
+      bags: el.querySelector('[data-flag=bags]'), dark: el.querySelector('[data-flag=dark]'),
+      state: el.querySelector('.state'),
+    };
+    el.addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (b && b.classList.contains('gbtn')) { grade(sd.key, Number(b.dataset.g)); if (e.detail) b.blur(); return; }
+      if (b && b.classList.contains('nabtn')) { toggleNA(sd.key); if (e.detail) b.blur(); return; }
+      if (e.target.closest('label')) return;
+      S.active = sd.key; render();
+    });
+    for (const cb of [c.bags, c.dark]) {
+      cb.addEventListener('change', () => { setFlag(sd.key, cb.dataset.flag, cb.checked); cb.blur(); });
+    }
+    cards[sd.key] = c;
+  }
+}
+
+function ensureRec(key) {
+  let rec = S.data.grades[key];
+  if (!rec) rec = S.data.grades[key] = { right: blankSide(), left: blankSide(), note: '', t: 0, at: '' };
+  rec.right = rec.right || blankSide();
+  rec.left = rec.left || blankSide();
+  return rec;
+}
+
+function change(fn) {
+  const rec = ensureRec(curKey());
+  const was = isDone(rec);
+  fn(rec);
+  rec.at = new Date().toISOString();
+  if (!was && isDone(rec)) {
+    S.data.sinceExport = (S.data.sinceExport || 0) + 1;
+    if (S.data.sinceExport % REMIND_EVERY === 0) {
+      toast(`เกรดเพิ่มอีก ${S.data.sinceExport} ภาพตั้งแต่ส่งออกครั้งล่าสุด · ส่งออก CSV สำรองไว้ด้วย`, 6000);
+    }
+  }
+  S.skipAt = -Infinity;
+  hint('');
+  save();
+  render();
+}
+
+function moveActiveFrom(side) {
+  const rec = S.data.grades[curKey()];
+  S.active = sideDone(rec[side]) && !sideDone(rec[OTHER[side]]) ? OTHER[side] : side;
+  render();
+}
+function grade(side, g) {
+  if (!S.data) return;
+  change(rec => { rec[side].g = g; rec[side].na = false; });
+  moveActiveFrom(side);
+}
+function toggleNA(side) {
+  if (!S.data) return;
+  change(rec => { const r = rec[side]; r.na = !r.na; if (r.na) r.g = null; });
+  moveActiveFrom(side);
+}
+function setFlag(side, flag, value) {
+  if (!S.data) return;
+  change(rec => { rec[side][flag] = value === undefined ? !rec[side][flag] : value; });
+  S.active = side;
+  render();
+}
+
+function commitTime() {
+  if (!S.visitStart || !S.data) { S.visitStart = 0; return; }
+  const dt = Math.min((performance.now() - S.visitStart) / 1000, VISIT_CAP_S);
+  S.visitStart = 0;
+  const rec = S.data.grades[curKey()];
+  if (rec && dt > 0) { rec.t = Math.round(((rec.t || 0) + dt) * 10) / 10; save(); }
+}
+
+function showImage(i) {
+  commitTime();
+  S.idx = clamp(i, 0, S.order.length - 1);
+  const key = curKey();
+  const rec = S.data.grades[key];
+  S.active = !sideDone(rec && rec.right) ? 'right' : !sideDone(rec && rec.left) ? 'left' : 'right';
+  S.skipAt = -Infinity;
+  for (const sd of SIDES) cards[sd.key].el.classList.remove('flash');
+  $('stageMsg').hidden = true;
+  $('photo').src = urlFor(key, S.files, 'g:');
+  for (const j of [S.idx + 1, S.idx - 1]) {
+    if (j >= 0 && j < S.order.length) new Image().src = urlFor(S.order[j], S.files, 'g:');
+  }
+  $('noteInput').value = (rec && rec.note) || '';
+  hint('');
+  S.visitStart = performance.now();
+  render();
+}
+
+function flashMissing() {
+  const rec = S.data.grades[curKey()];
+  for (const sd of SIDES) {
+    if (sideDone(rec && rec[sd.key])) continue;
+    const el = cards[sd.key].el;
+    el.classList.remove('flash');
+    void el.offsetWidth;
+    el.classList.add('flash');
+    setTimeout(() => el.classList.remove('flash'), 1600);
+  }
+}
+
+function next() {
+  if (!S.data) return;
+  if (!isDone(S.data.grades[curKey()])) {
+    const now = performance.now();
+    if (now - S.skipAt > SKIP_WINDOW_MS) {
+      S.skipAt = now;
+      flashMissing();
+      hint('ภาพนี้ยังเกรดไม่ครบ · กด Enter หรือ “ถัดไป” อีกครั้งเพื่อข้ามไปก่อน');
+      return;
+    }
+  }
+  if (!S.doneShown && countDone() === S.order.length) { S.doneShown = true; openDone(); return; }
+  if (S.idx >= S.order.length - 1) {
+    const left = S.order.length - countDone();
+    if (!left) openDone();
+    else hint(`นี่คือภาพสุดท้ายในลำดับ · ยังเหลือ ${left} ภาพที่ไม่ครบ กด “ข้ามไปภาพที่ยังไม่ครบ”`);
+    return;
+  }
+  showImage(S.idx + 1);
+}
+function prev() { if (S.data && S.idx > 0) showImage(S.idx - 1); }
+function jumpIncomplete() {
+  if (!S.data) return;
+  const n = S.order.length;
+  for (let d = 1; d <= n; d++) {
+    const j = (S.idx + d) % n;
+    if (!isDone(S.data.grades[S.order[j]])) { showImage(j); return; }
+  }
+  openDone();
+}
+
+function render() {
+  if (!S.data || !S.order.length) return;
+  const key = curKey();
+  const rec = S.data.grades[key];
+  for (const sd of SIDES) {
+    const c = cards[sd.key];
+    const r = (rec && rec[sd.key]) || blankSide();
+    c.el.classList.toggle('active', S.active === sd.key);
+    c.g.forEach(b => b.setAttribute('aria-pressed', String(r.g === Number(b.dataset.g))));
+    c.na.setAttribute('aria-pressed', String(!!r.na));
+    c.bags.checked = !!r.bags;
+    c.dark.checked = !!r.dark;
+    c.state.textContent = sideDone(r) ? '✓ เสร็จ' : '';
+  }
+  $('lblL').classList.toggle('on', S.active === 'right');
+  $('lblR').classList.toggle('on', S.active === 'left');
+  const done = countDone();
+  $('posText').textContent = `ภาพที่ ${S.idx + 1} จาก ${S.order.length}`;
+  $('doneText').textContent = `ครบแล้ว ${done}`;
+  $('pfill').style.width = `${(100 * done) / S.order.length}%`;
+  $('fname').textContent = key;
+  $('btnPrev').disabled = S.idx === 0;
+  renderStatus(done);
+}
+
+function whenStr(iso) {
+  const d = new Date(iso), now = new Date();
+  const t = d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+  return d.toDateString() === now.toDateString() ? t : `${d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })} ${t}`;
+}
+function renderStatus(done) {
+  const st = $('status');
+  if (!gradingActive()) { st.innerHTML = ''; return; }
+  if (done === undefined) done = countDone();
+  const parts = [`<b>${esc(S.data.rater)}</b>`, `ชุด ${S.setId}`, `ครบ ${done}/${S.order.length}`];
+  parts.push(store.ok ? 'บันทึกในเครื่องแล้ว' : '<span class="warn">บันทึกอัตโนมัติไม่ได้ ส่งออก CSV เป็นระยะ</span>');
+  parts.push(S.data.lastExport ? `ส่งออกล่าสุด ${whenStr(S.data.lastExport)}` : 'ยังไม่เคยส่งออก');
+  st.innerHTML = parts.join(' · ');
+}
+
+/* ---------- CSV ---------- */
+function csvCell(v) {
+  const s = v === null || v === undefined ? '' : String(v);
+  return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+const toCSV = rows => '﻿' + rows.map(r => r.map(csvCell).join(',')).join('\r\n') + '\r\n';
+
+function parseCSV(text) {
+  text = text.replace(/^﻿/, '');
+  const rows = [];
+  let row = [], cell = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += c;
+    } else if (c === '"') q = true;
+    else if (c === ',') { row.push(cell); cell = ''; }
+    else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+    else if (c !== '\r') cell += c;
+  }
+  if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+function csvObjects(text) {
+  const rows = parseCSV(text);
+  if (!rows.length) return null;
+  const head = rows[0].map(h => h.trim());
+  if (!['image', 'person_side', 'grade', 'unassessable'].every(h => head.includes(h))) return null;
+  return rows.slice(1)
+    .filter(r => r.some(x => x.trim() !== ''))
+    .map(r => Object.fromEntries(head.map((h, i) => [h, (r[i] || '').trim()])));
+}
+function readRow(o) {
+  const side = o.person_side;
+  if (!o.image || (side !== 'left' && side !== 'right')) return null;
+  const na = o.unassessable === '1';
+  const g = na || o.grade === '' ? null : Number(o.grade);
+  if (g !== null && !(Number.isInteger(g) && g >= 0 && g <= 3)) return null;
+  if (!na && g === null) return null;
+  return {
+    rater: normName(unsafe(o.rater || '')), image: o.image, side, g, na,
+    bags: o.eye_bags === '1', dark: o.dark_circles === '1', note: unsafe(o.note || ''),
+    t: parseFloat(o.seconds) || 0, at: o.graded_at || '',
+  };
+}
+
+function download(name, text) {
+  const blob = new Blob([text], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+const fileSafe = s => String(s).replace(/[\\/:*?"<>|\s]+/g, '_').slice(0, 40) || 'rater';
+function stamp() {
+  const d = new Date(), p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}`;
+}
+
+function exportCSV() {
+  if (!S.data) return;
+  commitTime();
+  if (gradingActive()) S.visitStart = performance.now();
+  const seq = new Map(S.order.map((k, i) => [k, i + 1]));
+  const rows = [CSV_COLS];
+  for (const key of Object.keys(S.data.grades).sort(byStr)) {
+    const rec = S.data.grades[key];
+    for (const sd of SIDES) {
+      const r = rec[sd.key];
+      if (!sideDone(r)) continue;
+      rows.push([
+        safeText(S.data.rater), S.setId, key, sd.key, sd.img, r.na ? '' : r.g, r.na ? 1 : 0,
+        r.bags ? 1 : 0, r.dark ? 1 : 0, safeText(rec.note || ''), (rec.t || 0).toFixed(1),
+        seq.get(key) || '', rec.at || '',
+      ]);
+    }
+  }
+  if (rows.length === 1) { toast('ยังไม่มีเกรดให้ส่งออก'); return; }
+  download(`undereye_${fileSafe(S.data.rater)}_${S.setId}_${stamp()}.csv`, toCSV(rows));
+  S.data.lastExport = new Date().toISOString();
+  S.data.sinceExport = 0;
+  save();
+  toast(`ส่งออกแล้ว ${rows.length - 1} แถว (แถวละหนึ่งข้าง)`);
+}
+
+async function importForRater(file) {
+  let objs = null;
+  try { objs = csvObjects(await file.text()); } catch (e) { objs = null; }
+  const rows = objs ? objs.map(readRow).filter(Boolean) : [];
+  if (!rows.length) { toast('ไฟล์นี้ไม่ใช่ CSV จากเครื่องมือนี้ หรือไม่มีแถวเกรด'); return; }
+  const fileRaters = [...new Set(rows.map(r => r.rater).filter(Boolean))];
+  let target = S.data ? S.data.rater : normName($('raterName').value);
+  if (!target) { target = fileRaters[0] || ''; $('raterName').value = target; }
+  if (!target) { toast('ใส่ชื่อผู้ให้เกรดก่อน'); return; }
+  if (fileRaters.length && !fileRaters.some(r => nameKey(r) === nameKey(target))) {
+    if (!window.confirm(`ไฟล์นี้เป็นผลของ “${fileRaters.join(', ')}” แต่ชื่อที่ใช้อยู่คือ “${target}” นำเข้าเป็นของ “${target}” หรือไม่`)) return;
+  }
+  const key = nameKey(target);
+  const data = S.data && S.rkey === key ? S.data : store.get(PREFIX + key) || newData(target);
+  const byImg = new Map();
+  for (const r of rows) { if (!byImg.has(r.image)) byImg.set(r.image, []); byImg.get(r.image).push(r); }
+  let added = 0, kept = 0, outside = 0;
+  for (const [img, rs] of byImg) {
+    const at = rs.reduce((m, r) => (r.at > m ? r.at : m), '');
+    const cur = data.grades[img];
+    if (cur && cur.at && at && cur.at > at) { kept++; continue; }
+    const rec = { right: blankSide(), left: blankSide(), note: '', t: 0, at };
+    for (const r of rs) {
+      rec[r.side] = { g: r.g, na: r.na, bags: r.bags, dark: r.dark };
+      if (r.note) rec.note = r.note;
+      rec.t = Math.max(rec.t, r.t);
+    }
+    if (cur) for (const sd of ['right', 'left']) if (!rs.some(r => r.side === sd) && cur[sd]) rec[sd] = cur[sd];
+    data.grades[img] = rec;
+    added++;
+    if (S.keys.length && !S.files.has(img)) outside++;
+  }
+  store.set(PREFIX + key, data);
+  if (S.data && S.rkey === key) { S.data = data; if (gradingActive()) showImage(S.idx); }
+  updateSetup();
+  toast(`นำเข้า ${added} ภาพ` + (kept ? ` · คงผลในเครื่องที่ใหม่กว่า ${kept} ภาพ` : '') +
+    (outside ? ` · ${outside} ภาพไม่อยู่ในชุดที่เปิดอยู่` : ''), 6000);
+}
+
+function resetRater() {
+  if (!S.data) return;
+  if (!window.confirm(`ล้างเกรดทั้งหมดของ “${S.data.rater}” ในเบราว์เซอร์นี้หรือไม่ ถ้ายังไม่ได้ส่งออก CSV เกรดจะหายถาวร`)) return;
+  store.del(PREFIX + S.rkey);
+  S.data = newData(S.data.rater);
+  S.doneShown = false;
+  showImage(0);
+  toast('ล้างผลแล้ว');
+}
+
+/* ---------- statistics ---------- */
+// weighted kappa แบบ linear (Cicchetti–Allison) ใช้ค่าเกรดจริงเป็นระยะห่าง
+function weightedKappa(a, b, cats) {
+  const n = a.length;
+  if (!n) return NaN;
+  const k = cats.length, ix = new Map(cats.map((c, i) => [c, i]));
+  const O = cats.map(() => new Array(k).fill(0));
+  for (let t = 0; t < n; t++) O[ix.get(a[t])][ix.get(b[t])] += 1;
+  const ra = O.map(r => r.reduce((s, x) => s + x, 0));
+  const cb = cats.map((_, j) => O.reduce((s, r) => s + r[j], 0));
+  let obs = 0, exp = 0;
+  for (let i = 0; i < k; i++) {
+    for (let j = 0; j < k; j++) {
+      const w = Math.abs(cats[i] - cats[j]);
+      obs += w * O[i][j];
+      exp += (w * ra[i] * cb[j]) / n;
+    }
+  }
+  return exp === 0 ? NaN : 1 - obs / exp;
+}
+// ICC(2,1) ของ Shrout & Fleiss: two-way random, absolute agreement, single rater
+function icc21(Y) {
+  const n = Y.length, k = n ? Y[0].length : 0;
+  if (n < 2 || k < 2) return NaN;
+  let grand = 0;
+  for (const r of Y) for (const v of r) grand += v;
+  grand /= n * k;
+  const rowM = Y.map(r => r.reduce((s, v) => s + v, 0) / k);
+  const colM = Y[0].map((_, j) => Y.reduce((s, r) => s + r[j], 0) / n);
+  let ssr = 0, ssc = 0, sst = 0;
+  for (const m of rowM) ssr += (m - grand) ** 2;
+  ssr *= k;
+  for (const m of colM) ssc += (m - grand) ** 2;
+  ssc *= n;
+  for (const r of Y) for (const v of r) sst += (v - grand) ** 2;
+  const msr = ssr / (n - 1), msc = ssc / (k - 1), mse = (sst - ssr - ssc) / ((n - 1) * (k - 1));
+  const den = msr + (k - 1) * mse + (k * (msc - mse)) / n;
+  return den === 0 ? NaN : (msr - mse) / den;
+}
+const collapse = g => Math.min(g, 2);
+const median = a => {
+  if (!a.length) return NaN;
+  const b = a.slice().sort((x, y) => x - y), m = b.length >> 1;
+  return b.length % 2 ? b[m] : (b[m - 1] + b[m]) / 2;
+};
+const landisKoch = k => (!Number.isFinite(k) ? '' : k < 0 ? 'poor' : k <= 0.2 ? 'slight' : k <= 0.4 ? 'fair'
+  : k <= 0.6 ? 'moderate' : k <= 0.8 ? 'substantial' : 'almost perfect');
+window.graderStats = { weightedKappa, icc21 };
+
+/* ---------- summary ---------- */
+const SUM = { raters: new Map(), files: new Map() };
+const idParts = id => { const i = id.lastIndexOf('|'); return [id.slice(0, i), id.slice(i + 1)]; };
+const sideLabel = side => `${SIDE[side].title} · ${SIDE[side].sub.replace('ของคนในภาพ', '')}`;
+const ratersSorted = () => [...SUM.raters.values()].sort((a, b) => a.name.localeCompare(b.name, 'th'));
+
+async function addSummaryFiles(list) {
+  let bad = 0;
+  for (const f of list) {
+    let objs = null;
+    try { objs = csvObjects(await f.text()); } catch (e) { objs = null; }
+    if (!objs) { bad++; continue; }
+    for (const o of objs) {
+      const r = readRow(o);
+      if (!r) continue;
+      const name = r.rater || f.name.replace(/\.csv$/i, '');
+      const k = nameKey(name);
+      if (!SUM.raters.has(k)) SUM.raters.set(k, { name, rows: new Map() });
+      const m = SUM.raters.get(k).rows;
+      const id = `${r.image}|${r.side}`;
+      const old = m.get(id);
+      if (!old || r.at >= old.at) m.set(id, r);
+    }
+  }
+  if (bad) toast(`ข้าม ${bad} ไฟล์ที่ไม่ใช่ CSV จากเครื่องมือนี้`);
+  renderSummary();
+}
+
+function pairStats(A, B) {
+  const a = [], b = [];
+  for (const [id, x] of A.rows) {
+    const y = B.rows.get(id);
+    if (x.g !== null && y && y.g !== null) { a.push(x.g); b.push(y.g); }
+  }
+  const n = a.length;
+  let same = 0, near = 0;
+  for (let i = 0; i < n; i++) { same += a[i] === b[i]; near += Math.abs(a[i] - b[i]) <= 1; }
+  return {
+    n, exact: n ? same / n : NaN, within1: n ? near / n : NaN,
+    k4: weightedKappa(a, b, [0, 1, 2, 3]),
+    k3: weightedKappa(a.map(collapse), b.map(collapse), [0, 1, 2]),
+  };
+}
+
+function disagreements(R) {
+  const ids = new Set();
+  R.forEach(r => r.rows.forEach((_, id) => ids.add(id)));
+  const out = [];
+  for (const id of ids) {
+    const xs = R.map(r => r.rows.get(id));
+    const vals = xs.filter(x => x && x.g !== null).map(x => x.g);
+    if (vals.length < 2) continue;
+    const spread = Math.max(...vals) - Math.min(...vals);
+    if (spread >= 1) out.push({ id, xs, spread });
+  }
+  return out.sort((p, q) => q.spread - p.spread || byStr(p.id, q.id));
+}
+
+function cellHTML(x) {
+  if (!x) return '<span class="muted">–</span>';
+  let s = x.na ? '<span class="muted">ประเมินไม่ได้</span>' : String(x.g);
+  if (x.bags) s += '<span class="pill">ถุง</span>';
+  if (x.dark) s += '<span class="pill">คล้ำ</span>';
+  return s;
+}
+
+function renderSummary() {
+  const out = $('sumOut');
+  const R = ratersSorted();
+  $('sumNote').textContent = R.length
+    ? `ผู้ให้เกรด ${R.length} คน: ${R.map(r => `${r.name} (${r.rows.size} ข้าง)`).join(', ')}` +
+      (SUM.files.size ? ` · เปิดโฟลเดอร์ภาพแล้ว ${SUM.files.size} ภาพ` : '')
+    : '';
+  if (!R.length) { out.innerHTML = '<p class="muted">ยังไม่ได้เลือกไฟล์ CSV</p>'; return; }
+  let h = '';
+
+  // แต่ละคน
+  h += '<h2>สัดส่วนเกรดของแต่ละคน</h2><div class="tablewrap"><table><thead><tr><th>ผู้ให้เกรด</th>' +
+    '<th class="num">ข้างที่ให้เกรด</th><th class="num">ประเมินไม่ได้</th>' +
+    [0, 1, 2, 3].map(g => `<th class="num">เกรด ${g}</th>`).join('') +
+    '<th class="num">ถุงใต้ตาเด่น</th><th class="num">รอยคล้ำเด่น</th><th class="num">วินาทีต่อภาพ (มัธยฐาน)</th></tr></thead><tbody>';
+  const all = [0, 0, 0, 0];
+  for (const r of R) {
+    const rows = [...r.rows.values()];
+    const cnt = [0, 0, 0, 0];
+    let graded = 0, na = 0, bags = 0, dark = 0;
+    const perImg = new Map();
+    for (const x of rows) {
+      if (x.g !== null) { cnt[x.g]++; all[x.g]++; graded++; }
+      if (x.na) na++;
+      if (x.bags) bags++;
+      if (x.dark) dark++;
+      perImg.set(x.image, x.t);
+    }
+    const med = median([...perImg.values()].filter(t => t > 0));
+    h += `<tr><td>${esc(r.name)}</td><td class="num">${graded}</td><td class="num">${na}</td>` +
+      cnt.map(c => `<td class="num">${c} <span class="muted">(${pct(c, graded)})</span></td>`).join('') +
+      `<td class="num">${bags}</td><td class="num">${dark}</td><td class="num">${fmt(med, 1)}</td></tr>`;
+  }
+  if (R.length > 1) {
+    const tot = all.reduce((s, x) => s + x, 0);
+    h += `<tr><td><b>รวมทุกคน</b></td><td class="num">${tot}</td><td></td>` +
+      all.map(c => `<td class="num">${c} <span class="muted">(${pct(c, tot)})</span></td>`).join('') +
+      '<td></td><td></td><td></td></tr>';
+  }
+  h += '</tbody></table></div>';
+
+  if (R.length >= 2) {
+    // รายคู่
+    h += '<h2>ความสอดคล้องรายคู่</h2><p class="muted" style="margin-top:0">นับเฉพาะข้างที่ทั้งสองคนให้เกรด ไม่นับข้างที่ประเมินไม่ได้ · κ คือ weighted kappa แบบ linear (Cicchetti–Allison) · เป้าหมายคือ κ ของเกรด 0–3 ตั้งแต่ 0.61 ขึ้นไป</p>';
+    h += '<div class="tablewrap"><table><thead><tr><th>คู่</th><th class="num">จำนวนข้าง</th><th class="num">ตรงกัน</th>' +
+      '<th class="num">ต่างไม่เกิน 1</th><th class="num">κ เกรด 0–3</th><th>ระดับ (Landis–Koch)</th><th class="num">κ เกรด 0/1/≥2</th></tr></thead><tbody>';
+    for (let i = 0; i < R.length; i++) {
+      for (let j = i + 1; j < R.length; j++) {
+        const p = pairStats(R[i], R[j]);
+        const ok = Number.isFinite(p.k4) && p.k4 >= KAPPA_TARGET;
+        h += `<tr><td>${esc(R[i].name)} กับ ${esc(R[j].name)}</td><td class="num">${p.n}</td>` +
+          `<td class="num">${pct(p.exact * p.n, p.n)}</td><td class="num">${pct(p.within1 * p.n, p.n)}</td>` +
+          `<td class="num ${ok ? 'good' : ''}">${fmt(p.k4)}</td><td>${landisKoch(p.k4)}${ok ? ' <span class="good">✓ ถึงเป้า</span>' : ''}</td>` +
+          `<td class="num">${fmt(p.k3)}</td></tr>`;
+      }
+    }
+    h += '</tbody></table></div>';
+
+    // ICC
+    const common = [];
+    const ids = new Set();
+    R[0].rows.forEach((_, id) => ids.add(id));
+    for (const id of ids) {
+      const xs = R.map(r => r.rows.get(id));
+      if (xs.every(x => x && x.g !== null)) common.push(xs.map(x => x.g));
+    }
+    const icc = icc21(common);
+    h += `<div class="kpis"><div><b>${common.length}</b><span>ข้างที่ทุกคนให้เกรด</span></div>` +
+      `<div><b>${fmt(icc)}</b><span>ICC(2,1) เกรด 0–3 (Shrout–Fleiss)</span></div></div>`;
+
+    // ข้างที่เห็นต่าง
+    const dis = disagreements(R);
+    const big = dis.filter(d => d.spread >= 2).length;
+    h += `<h2>ข้างที่เห็นต่าง</h2><p class="muted" style="margin-top:0">${dis.length} ข้าง · ต่างกันตั้งแต่ 2 ระดับ ${big} ข้าง · เรียงจากต่างมากไปน้อย ใช้คุยกันตอนฝึก หรือตกลงเกรดร่วมกันเมื่อ κ ไม่ถึงเป้า</p>`;
+    if (dis.length) {
+      const shown = dis.slice(0, 300);
+      h += '<div class="tablewrap"><table><thead><tr><th>ภาพ</th><th>ด้าน</th>' +
+        R.map(r => `<th>${esc(r.name)}</th>`).join('') + '<th class="num">ต่างกัน</th><th></th></tr></thead><tbody>';
+      for (const d of shown) {
+        const [img, side] = idParts(d.id);
+        const can = SUM.files.has(img) || S.files.has(img);
+        h += `<tr><td>${esc(img)}</td><td>${sideLabel(side)}</td>` + d.xs.map(x => `<td>${cellHTML(x)}</td>`).join('') +
+          `<td class="num">${d.spread}</td><td><button type="button" class="btn small ghost" data-view="${esc(d.id)}" ${can ? '' : 'disabled title="เลือกโฟลเดอร์ภาพก่อน"'}>ดูภาพ</button></td></tr>`;
+      }
+      h += '</tbody></table></div>';
+      if (dis.length > shown.length) h += `<p class="muted">แสดง ${shown.length} ข้างแรก ส่งออกเพื่อดูทั้งหมด</p>`;
+    }
+  }
+
+  h += '<h2>ส่งออก</h2><div class="row" style="margin-top:0">' +
+    '<button type="button" class="btn primary" id="btnMerged">ตารางรวมพร้อม soft label</button>' +
+    (R.length >= 2 ? '<button type="button" class="btn" id="btnDis">รายการข้างที่เห็นต่าง</button>' : '') +
+    '</div><p class="muted" style="font-size:13px">ตารางรวมมีหนึ่งแถวต่อใต้ตาหนึ่งข้าง มีเกรดของทุกคน (NA คือประเมินไม่ได้) ค่าเฉลี่ย p_ge1 และ p_ge2 คือสัดส่วนคนที่ให้เกรดตั้งแต่ 1 และตั้งแต่ 2 ใช้เป็นเป้าหมายตอนเทรน และจำนวนคนที่ติ๊กถุงใต้ตาหรือรอยคล้ำ</p>';
+  out.innerHTML = h;
+  const bm = $('btnMerged');
+  if (bm) bm.onclick = () => download(`undereye_merged_${stamp()}.csv`, toCSV(mergedRows(R)));
+  const bd = $('btnDis');
+  if (bd) bd.onclick = () => download(`undereye_disagreements_${stamp()}.csv`, toCSV(disRows(R)));
+}
+
+const num3 = x => (Number.isFinite(x) ? String(+x.toFixed(3)) : '');
+function sortedIds(R) {
+  const ids = new Set();
+  R.forEach(r => r.rows.forEach((_, id) => ids.add(id)));
+  return [...ids].sort((p, q) => {
+    const [ip, sp] = idParts(p), [iq, sq] = idParts(q);
+    return byStr(ip, iq) || (sp === sq ? 0 : sp === 'right' ? -1 : 1);
+  });
+}
+function mergedRows(R) {
+  const rows = [['image', 'person_side', 'image_side', 'n_graded', 'n_unassessable', ...R.map(r => `grade_${r.name}`),
+    'mean_grade', 'p_ge1', 'p_ge2', 'n_eye_bags', 'n_dark_circles']];
+  for (const id of sortedIds(R)) {
+    const [img, side] = idParts(id);
+    const xs = R.map(r => r.rows.get(id));
+    const vals = xs.filter(x => x && x.g !== null).map(x => x.g);
+    const n = vals.length;
+    rows.push([
+      img, side, SIDE[side].img, n, xs.filter(x => x && x.na).length,
+      ...xs.map(x => (!x ? '' : x.na ? 'NA' : x.g)),
+      n ? num3(vals.reduce((s, v) => s + v, 0) / n) : '',
+      n ? num3(vals.filter(v => v >= 1).length / n) : '',
+      n ? num3(vals.filter(v => v >= 2).length / n) : '',
+      xs.filter(x => x && x.bags).length, xs.filter(x => x && x.dark).length,
+    ]);
+  }
+  return rows;
+}
+function disRows(R) {
+  const rows = [['image', 'person_side', 'image_side', 'spread', ...R.map(r => `grade_${r.name}`)]];
+  for (const d of disagreements(R)) {
+    const [img, side] = idParts(d.id);
+    rows.push([img, side, SIDE[side].img, d.spread, ...d.xs.map(x => (!x ? '' : x.na ? 'NA' : x.g))]);
+  }
+  return rows;
+}
+
+function openView(id) {
+  const [img, side] = idParts(id);
+  const files = SUM.files.has(img) ? SUM.files : S.files.has(img) ? S.files : null;
+  if (!files) { toast('เลือกโฟลเดอร์ภาพก่อน'); return; }
+  $('viewTitle').textContent = `${img} · ${SIDE[side].title} (${SIDE[side].sub})`;
+  $('lbl2L').classList.toggle('on', side === 'right');
+  $('lbl2R').classList.toggle('on', side === 'left');
+  $('viewInfo').innerHTML = ratersSorted().map(r => `${esc(r.name)}: ${cellHTML(r.rows.get(id))}`).join(' &nbsp;·&nbsp; ');
+  openModal('viewModal');
+  const url = urlFor(img, files, files === SUM.files ? 's:' : 'g:');
+  const ph = $('photo2');
+  if (ph.src === url && ph.complete) requestAnimationFrame(() => view2.eye());
+  else ph.src = url;
+}
+
+/* ---------- modals ---------- */
+let lastFocus = null;
+function openModal(id) {
+  lastFocus = document.activeElement;
+  const m = $(id);
+  m.hidden = false;
+  const f = m.querySelector('[data-autofocus]');
+  if (f) f.focus();
+}
+function closeModal(m) {
+  m.hidden = true;
+  if (m.id === 'doneModal' || m.id === 'helpModal') { if (document.activeElement) document.activeElement.blur(); }
+  else if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+function openDone() {
+  commitTime();
+  $('doneCount').textContent = S.order.length;
+  openModal('doneModal');
+}
+document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => {
+  if (e.target === m || e.target.closest('[data-close]')) closeModal(m);
+}));
+
+/* ---------- tabs ---------- */
+function showTab(name) {
+  const g = name === 'grade';
+  if (!g) commitTime();
+  $('tab-grade').hidden = !g;
+  $('tab-summary').hidden = g;
+  $('tabbtn-grade').setAttribute('aria-selected', String(g));
+  $('tabbtn-summary').setAttribute('aria-selected', String(!g));
+  $('gradeActions').hidden = !(g && S.data && !$('workspace').hidden);
+  if (g && gradingActive()) S.visitStart = performance.now();
+  if (!g) renderSummary();
+  renderStatus();
+}
+
+/* ---------- keyboard (ใช้ e.code จึงทำงานได้แม้แป้นพิมพ์เป็นภาษาไทย) ---------- */
+document.addEventListener('keydown', e => {
+  const modal = document.querySelector('.modal:not([hidden])');
+  if (modal) { if (e.key === 'Escape') { closeModal(modal); e.preventDefault(); } return; }
+  if (e.key === 'Escape' && $('menu').open) { $('menu').open = false; return; }
+  const t = e.target;
+  const typing = t && ((t.tagName === 'INPUT' && !['checkbox', 'button', 'file'].includes(t.type)) || t.tagName === 'TEXTAREA' || t.isContentEditable);
+  if (typing) {
+    if (e.key === 'Escape' || (e.key === 'Enter' && t.id === 'noteInput')) { t.blur(); e.preventDefault(); }
+    return;
+  }
+  if (!gradingActive() || e.metaKey || e.ctrlKey || e.altKey) return;
+  const c = e.code;
+  if (['Enter', 'NumpadEnter', 'Space'].includes(c) && t && /^(BUTTON|A|SUMMARY)$/.test(t.tagName)) return;
+  const m = /^(?:Digit|Numpad)([0-3])$/.exec(c);
+  if (m) { grade(S.active, Number(m[1])); e.preventDefault(); return; }
+  switch (c) {
+    case 'ArrowLeft': S.active = 'right'; render(); break;
+    case 'ArrowRight': S.active = 'left'; render(); break;
+    case 'Enter': case 'NumpadEnter': if (e.shiftKey) prev(); else next(); break;
+    case 'KeyX': toggleNA(S.active); break;
+    case 'KeyB': setFlag(S.active, 'bags'); break;
+    case 'KeyD': setFlag(S.active, 'dark'); break;
+    case 'KeyF': view.fit(); break;
+    case 'KeyZ': if (view.zoomed()) view.fit(); else view.eye(); break;
+    case 'Equal': case 'NumpadAdd': view.zoomBy(1.25); break;
+    case 'Minus': case 'NumpadSubtract': view.zoomBy(0.8); break;
+    case 'Slash': if (!e.shiftKey) return; openModal('helpModal'); break;
+    case 'KeyH': openModal('helpModal'); break;
+    default: return;
+  }
+  e.preventDefault();
+});
+
+/* ---------- wiring ---------- */
+buildCards();
+$('raterName').value = ui.lastRater || '';
+$('raterName').addEventListener('input', updateSetup);
+$('raterName').addEventListener('keydown', e => { if (e.key === 'Enter' && !$('btnStart').disabled) start(); });
+$('btnPickDir').onclick = () => $('inDir').click();
+$('btnPickFiles').onclick = () => $('inFiles').click();
+$('inDir').onchange = e => { setGradingImages([...e.target.files]); e.target.value = ''; };
+$('inFiles').onchange = e => { setGradingImages([...e.target.files]); e.target.value = ''; };
+const drop = $('drop');
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, () => drop.classList.remove('over')));
+drop.addEventListener('drop', e => { e.preventDefault(); filesFromDrop(e.dataTransfer).then(setGradingImages); });
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => e.preventDefault());
+
+$('btnStart').onclick = start;
+$('btnImport').onclick = () => $('inImport').click();
+$('btnHelp').onclick = () => openModal('helpModal');
+$('inImport').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f) importForRater(f); };
+
+$('btnExport').onclick = exportCSV;
+$('btnExport2').onclick = exportCSV;
+const closeMenu = () => { $('menu').open = false; };
+$('mHelp').onclick = () => { closeMenu(); openModal('helpModal'); };
+$('mImport').onclick = () => { closeMenu(); $('inImport').click(); };
+$('mSetup').onclick = () => { closeMenu(); backToSetup(); };
+$('mReset').onclick = () => { closeMenu(); resetRater(); };
+document.addEventListener('click', e => { if ($('menu').open && !e.target.closest('#menu')) closeMenu(); });
+
+$('btnPrev').onclick = e => { prev(); if (e.detail) e.currentTarget.blur(); };
+$('btnNext').onclick = e => { next(); if (e.detail) e.currentTarget.blur(); };
+$('btnJump').onclick = e => { jumpIncomplete(); if (e.detail) e.currentTarget.blur(); };
+$('noteInput').addEventListener('input', () => {
+  if (!S.data) return;
+  const rec = ensureRec(curKey());
+  rec.note = $('noteInput').value;
+  rec.at = new Date().toISOString();
+  save();
+});
+
+$('zIn').onclick = () => view.zoomBy(1.25);
+$('zOut').onclick = () => view.zoomBy(0.8);
+$('zFit').onclick = () => view.fit();
+$('zEye').onclick = () => view.eye();
+$('keepZoom').checked = !!ui.keepZoom;
+$('keepZoom').onchange = e => { ui.keepZoom = e.target.checked; saveUI(); e.target.blur(); };
+$('photo').addEventListener('error', () => {
+  if (!$('photo').getAttribute('src')) return;
+  $('stageMsg').textContent = 'เปิดภาพนี้ไม่ได้ ถ้าไฟล์เสีย ให้กดประเมินไม่ได้ทั้งสองด้าน แล้วเขียนหมายเหตุ';
+  $('stageMsg').hidden = false;
+});
+
+$('tabbtn-grade').onclick = () => showTab('grade');
+$('tabbtn-summary').onclick = () => showTab('summary');
+$('btnSumCsv').onclick = () => $('inSumCsv').click();
+$('btnSumDir').onclick = () => $('inSumDir').click();
+$('inSumCsv').onchange = e => { const fs = [...e.target.files]; e.target.value = ''; addSummaryFiles(fs); };
+$('inSumDir').onchange = e => {
+  const { map } = collectImages([...e.target.files]);
+  e.target.value = '';
+  SUM.files = map;
+  dropUrls('s:');
+  renderSummary();
+};
+$('btnSumClear').onclick = () => { SUM.raters.clear(); SUM.files = new Map(); dropUrls('s:'); renderSummary(); };
+$('sumOut').addEventListener('click', e => { const b = e.target.closest('[data-view]'); if (b) openView(b.dataset.view); });
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) commitTime();
+  else if (gradingActive()) S.visitStart = performance.now();
+});
+window.addEventListener('pagehide', () => commitTime());
+window.addEventListener('beforeunload', e => {
+  commitTime();
+  if (!store.ok && S.data && (S.data.sinceExport || 0) > 0) { e.preventDefault(); e.returnValue = ''; }
+});
+
+if (!store.ok) $('storageWarn').hidden = false;
+updateSetup();
+showTab('grade');
+})();
+</script>
+</body>
+</html>

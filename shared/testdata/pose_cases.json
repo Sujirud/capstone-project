@@ -1,0 +1,197 @@
+{
+  "description": "Head pose cases for facemeasure.pose (api) and the web (web.md section 4.1). Each matrix is a 4x4 facial transformation matrix. R = Ry(yaw) Rx(-pitch) Rz(roll_z), times scale, with the translation in the last column. yaw = atan2(fx, fz), pitch = atan2(fy, hypot(fx, fz)), roll = atan2(ry, rx) with f = R(0,0,1) and r = R(1,0,0) after making R orthonormal. Expected angles are in degrees; roll differs from roll_z when yaw and pitch are both set.",
+  "layout": "rows",
+  "tolerance_deg": 0.01,
+  "cases": [
+    {
+      "name": "identity",
+      "built_from": {
+        "yaw_deg": 0,
+        "pitch_deg": 0,
+        "roll_z_deg": 0,
+        "scale": 1.0,
+        "translation": [0.0, 0.0, 0.0]
+      },
+      "matrix": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "yaw_deg": 0,
+      "pitch_deg": 0,
+      "roll_deg": 0.0
+    },
+    {
+      "name": "yaw_person_left",
+      "built_from": {
+        "yaw_deg": 20,
+        "pitch_deg": 0,
+        "roll_z_deg": 0,
+        "scale": 1.0,
+        "translation": [0.0, 0.0, 0.0]
+      },
+      "matrix": [
+        [0.939692620786, 0.0, 0.342020143326, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [-0.342020143326, 0.0, 0.939692620786, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "yaw_deg": 20,
+      "pitch_deg": 0,
+      "roll_deg": 0.0
+    },
+    {
+      "name": "yaw_person_right",
+      "built_from": {
+        "yaw_deg": -15,
+        "pitch_deg": 0,
+        "roll_z_deg": 0,
+        "scale": 1.0,
+        "translation": [0.0, 0.0, 0.0]
+      },
+      "matrix": [
+        [0.965925826289, 0.0, -0.258819045103, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.258819045103, 0.0, 0.965925826289, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "yaw_deg": -15,
+      "pitch_deg": 0,
+      "roll_deg": 0.0
+    },
+    {
+      "name": "pitch_up",
+      "built_from": {
+        "yaw_deg": 0,
+        "pitch_deg": 12,
+        "roll_z_deg": 0,
+        "scale": 1.0,
+        "translation": [0.0, 0.0, 0.0]
+      },
+      "matrix": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 0.978147600734, 0.207911690818, 0.0],
+        [0.0, -0.207911690818, 0.978147600734, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "yaw_deg": 0,
+      "pitch_deg": 12,
+      "roll_deg": 0.0
+    },
+    {
+      "name": "pitch_down",
+      "built_from": {
+        "yaw_deg": 0,
+        "pitch_deg": -8,
+        "roll_z_deg": 0,
+        "scale": 1.0,
+        "translation": [0.0, 0.0, 0.0]
+      },
+      "matrix": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 0.990268068742, -0.13917310096, 0.0],
+        [0.0, 0.13917310096, 0.990268068742, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "yaw_deg": 0,
+      "pitch_deg": -8,
+      "roll_deg": 0.0
+    },
+    {
+      "name": "roll_left_eye_higher",
+      "built_from": {
+        "yaw_deg": 0,
+        "pitch_deg": 0,
+        "roll_z_deg": 6,
+        "scale": 1.0,
+        "translation": [0.0, 0.0, 0.0]
+      },
+      "matrix": [
+        [0.994521895368, -0.104528463268, 0.0, 0.0],
+        [0.104528463268, 0.994521895368, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "yaw_deg": 0,
+      "pitch_deg": 0,
+      "roll_deg": 6.0
+    },
+    {
+      "name": "roll_right_eye_higher",
+      "built_from": {
+        "yaw_deg": 0,
+        "pitch_deg": 0,
+        "roll_z_deg": -10,
+        "scale": 1.0,
+        "translation": [0.0, 0.0, 0.0]
+      },
+      "matrix": [
+        [0.984807753012, 0.173648177667, 0.0, 0.0],
+        [-0.173648177667, 0.984807753012, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "yaw_deg": 0,
+      "pitch_deg": 0,
+      "roll_deg": -10.0
+    },
+    {
+      "name": "yaw_pitch_roll",
+      "built_from": {
+        "yaw_deg": 25,
+        "pitch_deg": -10,
+        "roll_z_deg": 5,
+        "scale": 1.0,
+        "translation": [0.0, 0.0, 0.0]
+      },
+      "matrix": [
+        [0.909255101278, -0.005882296613, 0.416197740727, 0.0],
+        [0.085831651177, 0.98106026219, -0.173648177667, 0.0],
+        [-0.407293614553, 0.193613430674, 0.892538935289, 0.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "yaw_deg": 25,
+      "pitch_deg": -10,
+      "roll_deg": 5.392614
+    },
+    {
+      "name": "yaw_pitch_roll_scaled_moved",
+      "built_from": {
+        "yaw_deg": -30,
+        "pitch_deg": 15,
+        "roll_z_deg": -12,
+        "scale": 1.6,
+        "translation": [2.5, -1.2, -45.0]
+      },
+      "matrix": [
+        [1.312311869192, 0.49062147198, -0.772740661031, 2.5],
+        [-0.321323634797, 1.511708847154, 0.414110472164, -1.2],
+        [0.857081489533, -0.184463906137, 1.33842608598, -45.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "yaw_deg": -30,
+      "pitch_deg": 15,
+      "roll_deg": -13.75836
+    },
+    {
+      "name": "profile_yaw_scaled_moved",
+      "built_from": {
+        "yaw_deg": 65,
+        "pitch_deg": -5,
+        "roll_z_deg": 3,
+        "scale": 0.8,
+        "translation": [-3.0, 4.0, -60.0]
+      },
+      "matrix": [
+        [0.340938473227, 0.045410835625, 0.722287209828, -3.0],
+        [0.041709441703, 0.795863558304, -0.069724594198, 4.0],
+        [-0.722510401272, 0.067372491204, 0.33680805733, -60.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "yaw_deg": 65,
+      "pitch_deg": -5,
+      "roll_deg": 6.974745
+    }
+  ]
+}

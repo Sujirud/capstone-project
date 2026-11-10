@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <!-- One unit of a Greek key band, drawn by the team: a square spiral rising from the
+       lower rule, between two rules. The unit repeats along x. -->
+  <g fill="none" stroke="#B9A48F" stroke-width="1.2" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M0 1 H20 M0 19 H20"/>
+    <path d="M3 19 V5 H17 V15 H8 V9 H13 V12"/>
+  </g>
+</svg>

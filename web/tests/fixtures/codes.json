@@ -1,0 +1,125 @@
+{
+  "regions": [
+    "jaw",
+    "chin",
+    "undereye_left",
+    "undereye_right",
+    "nose_base",
+    "nose_dorsum"
+  ],
+  "frontal_regions": [
+    "jaw",
+    "undereye_left",
+    "undereye_right",
+    "nose_base"
+  ],
+  "profile_regions": [
+    "chin",
+    "nose_dorsum"
+  ],
+  "images": [
+    "frontal",
+    "profile"
+  ],
+  "sexes": [
+    "female",
+    "male"
+  ],
+  "frontal_sources": [
+    "camera",
+    "upload"
+  ],
+  "measures": [
+    "facial_taperness",
+    "legan_angle",
+    "alar_intercanthal_ratio",
+    "nasofacial_angle"
+  ],
+  "units": {
+    "facial_taperness": "%",
+    "legan_angle": "deg",
+    "alar_intercanthal_ratio": "ratio",
+    "nasofacial_angle": "deg"
+  },
+  "methods": [
+    "model",
+    "measured"
+  ],
+  "statuses": [
+    "assessed",
+    "not_assessable"
+  ],
+  "levels": [
+    "clear",
+    "borderline"
+  ],
+  "frontal_codes": [
+    "no_face",
+    "multiple_faces",
+    "face_too_small",
+    "frontal_pose",
+    "smiling",
+    "eyes_closed",
+    "hair_occlusion"
+  ],
+  "profile_codes": [
+    "profile_invalid",
+    "missing_input"
+  ],
+  "status_codes": [
+    "no_face",
+    "multiple_faces",
+    "face_too_small",
+    "frontal_pose",
+    "smiling",
+    "eyes_closed",
+    "hair_occlusion",
+    "profile_invalid",
+    "missing_input",
+    "model_not_ready"
+  ],
+  "procedures": [
+    "botox_masseter",
+    "jaw_reduction",
+    "chin_filler",
+    "chin_implant",
+    "genioplasty",
+    "undereye_filler",
+    "alar_reduction",
+    "nose_filler",
+    "rhinoplasty_implant"
+  ],
+  "notes": [
+    "jaw_cause_unknown",
+    "chin_check_occlusion",
+    "chin_check_mandible",
+    "undereye_scope",
+    "nose_base_indications",
+    "nose_filler_vision_risk"
+  ],
+  "notes_with_procedures": [
+    "jaw_cause_unknown",
+    "chin_check_occlusion",
+    "chin_check_mandible",
+    "nose_base_indications",
+    "nose_filler_vision_risk"
+  ],
+  "withheld": [
+    "male_jaw_no_criterion",
+    "distance_unknown",
+    "age_under_18",
+    "age_21_or_under",
+    "no_procedure_at_grade"
+  ],
+  "grades": [
+    "0",
+    "1",
+    "2+"
+  ],
+  "chin_grades": [
+    "0",
+    "1",
+    "2",
+    "3"
+  ]
+}

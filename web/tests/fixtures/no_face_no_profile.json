@@ -1,0 +1,168 @@
+{
+  "name": "no_face_no_profile",
+  "meta": {
+    "age": 30,
+    "sex": "female",
+    "frontal_source": "camera",
+    "lang": "th",
+    "lab": false
+  },
+  "images": {
+    "frontal": {
+      "width": 1280,
+      "height": 1600,
+      "source": "camera"
+    },
+    "profile": null
+  },
+  "result": {
+    "request_id": "d8dddb98-68b9-4fe6-b8cd-69bf503d8313",
+    "versions": {
+      "api": "0.1.0",
+      "model_bundle": "0.0.0-stub"
+    },
+    "lab": false,
+    "retake": [
+      {
+        "image": "frontal",
+        "code": "no_face",
+        "regions": [
+          "jaw",
+          "undereye_left",
+          "undereye_right",
+          "nose_base"
+        ],
+        "text": "ให้ใบหน้าอยู่ในกรอบ"
+      },
+      {
+        "image": "profile",
+        "code": "missing_input",
+        "regions": [
+          "chin",
+          "nose_dorsum"
+        ],
+        "text": "ยังไม่มีภาพด้านข้าง"
+      }
+    ],
+    "quality": {
+      "frontal": {
+        "iod_px": null,
+        "yaw_deg": null,
+        "pitch_deg": null,
+        "roll_deg": null,
+        "smile": null,
+        "jaw_open": null,
+        "blink_left": null,
+        "blink_right": null,
+        "hair_jaw": null,
+        "hair_undereye_left": null,
+        "hair_undereye_right": null,
+        "failed": [
+          "no_face"
+        ]
+      },
+      "profile": {
+        "face_found": null,
+        "face_yaw_deg": null,
+        "silhouette_found": null,
+        "flipped": null,
+        "failed": [
+          "missing_input"
+        ]
+      }
+    },
+    "regions": [
+      {
+        "region": "jaw",
+        "status": "not_assessable",
+        "status_reasons": [
+          "no_face"
+        ],
+        "warnings": [],
+        "measurements": [],
+        "overlay": null,
+        "probabilities": null,
+        "decision": null,
+        "procedures": [],
+        "procedures_withheld": [],
+        "notes": []
+      },
+      {
+        "region": "chin",
+        "status": "not_assessable",
+        "status_reasons": [
+          "missing_input"
+        ],
+        "warnings": [],
+        "measurements": [],
+        "overlay": null,
+        "probabilities": null,
+        "decision": null,
+        "procedures": [],
+        "procedures_withheld": [],
+        "notes": []
+      },
+      {
+        "region": "undereye_left",
+        "status": "not_assessable",
+        "status_reasons": [
+          "no_face"
+        ],
+        "warnings": [],
+        "measurements": [],
+        "overlay": null,
+        "probabilities": null,
+        "decision": null,
+        "procedures": [],
+        "procedures_withheld": [],
+        "notes": []
+      },
+      {
+        "region": "undereye_right",
+        "status": "not_assessable",
+        "status_reasons": [
+          "no_face"
+        ],
+        "warnings": [],
+        "measurements": [],
+        "overlay": null,
+        "probabilities": null,
+        "decision": null,
+        "procedures": [],
+        "procedures_withheld": [],
+        "notes": []
+      },
+      {
+        "region": "nose_base",
+        "status": "not_assessable",
+        "status_reasons": [
+          "no_face"
+        ],
+        "warnings": [],
+        "measurements": [],
+        "overlay": null,
+        "probabilities": null,
+        "decision": null,
+        "procedures": [],
+        "procedures_withheld": [],
+        "notes": []
+      },
+      {
+        "region": "nose_dorsum",
+        "status": "not_assessable",
+        "status_reasons": [
+          "missing_input"
+        ],
+        "warnings": [],
+        "measurements": [],
+        "overlay": null,
+        "probabilities": null,
+        "decision": null,
+        "procedures": [],
+        "procedures_withheld": [],
+        "notes": []
+      }
+    ],
+    "disclaimer": "ผลนี้เป็นการนำเกณฑ์จากงานวิจัยมาใช้กับค่าที่วัดจากภาพถ่าย ไม่ใช่การวินิจฉัย การตัดสินใจทำหัตถการต้องผ่านการตรวจโดยแพทย์"
+  }
+}

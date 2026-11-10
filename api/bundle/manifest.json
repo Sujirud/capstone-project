@@ -1,0 +1,169 @@
+{
+  "bundle_version": "0.2.0",
+  "stub": false,
+  "created": "2026-11-07T08:31:39+00:00",
+  "crop_version": 1,
+  "runtime": {
+    "python": "3.12.16",
+    "mediapipe": "1.2.0",
+    "torch": "2.15.0"
+  },
+  "assets": {
+    "face_landmarker.task": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+    "selfie_multiclass_256x256.tflite": "c6748b1253a99067ef71f7e26ca71096cd449baefa8f101900ea23016507e0e0",
+    "dinov2_vitb14_pretrain.pth": "0b8b82f85de91b424aded121c7e1dcc2b7bc6d0adeea651bf73a13307fad8c73",
+    "dinov2-7764ea0f912e53c92e82eb78a2a1631e92725fc8.zip": "04276715cddb29d45d05bff3a6fc132224dc27749b279ac98ad2ce4620e20d48"
+  },
+  "backbone": {
+    "name": "dinov2_vitb14",
+    "image_size": 224,
+    "normalize": {
+      "mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "std": [
+        0.229,
+        0.224,
+        0.225
+      ]
+    },
+    "features": {
+      "cls": 768,
+      "cls_mean": 1536,
+      "grid4": 12288
+    },
+    "commit": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+    "weights_sha256": "0b8b82f85de91b424aded121c7e1dcc2b7bc6d0adeea651bf73a13307fad8c73"
+  },
+  "train_face_iod_px": {
+    "min": 75.0,
+    "max": 110.0
+  },
+  "degrade": {
+    "version": 2,
+    "order": [
+      "mirror",
+      "shrink",
+      "blur",
+      "noise",
+      "jpeg"
+    ],
+    "shrink": {
+      "resample": "bicubic",
+      "enlarge": false
+    },
+    "blur": {
+      "kind": "gaussian",
+      "truncate_sigmas": 4.0
+    },
+    "noise": {
+      "kind": "gaussian per channel",
+      "scale": "0-255"
+    },
+    "jpeg": {
+      "subsampling": "4:2:0"
+    },
+    "train": {
+      "iod_px": [
+        75.0,
+        110.0
+      ],
+      "blur_sigma_px": [
+        0.0,
+        0.8
+      ],
+      "noise_sigma": [
+        0.0,
+        4.0
+      ],
+      "jpeg_quality": [
+        75,
+        95
+      ],
+      "flipped_face_copies": [
+        2,
+        4
+      ],
+      "flipped_undereye_copies": []
+    },
+    "fixed": {
+      "iod_px": [
+        77.0,
+        110.0
+      ],
+      "iod_margin_px": 2.0,
+      "blur_sigma_px": 0.4,
+      "noise_sigma": 2.0,
+      "jpeg_quality": 85,
+      "flipped": false
+    },
+    "seed": "first 63 bits of sha256('task/image/kind/copy'); copies numbered from 1 within each kind"
+  },
+  "heads": {
+    "jaw": {
+      "feature": "grid4",
+      "stub": false,
+      "weights": "jaw_weights",
+      "bias": "jaw_bias",
+      "rmse": 0.019646142713584985,
+      "band": 0.010302437239003965,
+      "alpha": 10000.0,
+      "rmse_rows": "female",
+      "rmse_all": 0.023269440241734562,
+      "train_rows": 11212,
+      "train_images": 2803,
+      "selected_on": "val",
+      "from_bundle": "0.1.0"
+    },
+    "nose_base": {
+      "feature": "grid4",
+      "stub": false,
+      "weights": "nose_base_weights",
+      "bias": "nose_base_bias",
+      "rmse": 0.061421745070480614,
+      "band": 0.03220956311496003,
+      "alpha": 100000.0,
+      "rmse_rows": "all",
+      "rmse_all": 0.061421745070480614,
+      "train_rows": 11212,
+      "train_images": 2803,
+      "selected_on": "val",
+      "from_bundle": "0.1.0"
+    },
+    "undereye": {
+      "feature": "cls_mean",
+      "stub": false,
+      "weights": "undereye_weights",
+      "bias": "undereye_bias",
+      "temperature": 0.9770757782632057,
+      "thresholds": {
+        "low": 0.3,
+        "high": 0.7
+      },
+      "lam": 1.0,
+      "loss": "mean over rows of BCE(k=1) + BCE(k=2) on soft labels, plus lam |w|^2 on standardized features (biases not penalized)",
+      "train_rows": 4824,
+      "train_sides": 804,
+      "train_images": 403,
+      "val_rows": 120,
+      "converged": true,
+      "selected_on": "val",
+      "calibrated_on": "val"
+    }
+  },
+  "baseline": {
+    "jaw": {
+      "slope": 0.9014093064920496,
+      "intercept": 0.07622449081193794
+    },
+    "nose_base": {
+      "slope": 0.42870481495757506,
+      "intercept": 0.6857117807744331
+    }
+  },
+  "files": {
+    "heads.npz": "9eaf87e87370286ebd49211e34dae50a6797822ff98ea99a49138b8016f9454c"
+  }
+}

@@ -1,0 +1,12 @@
+# Store and check out text files with LF on every OS (macOS and Windows)
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.task binary
+*.pt binary
+*.pth binary
+*.npz binary
+*.zip binary
+*.xlsx binary

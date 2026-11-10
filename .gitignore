@@ -1,0 +1,18 @@
+# Datasets and downloaded model files stay on the team's machines; the trained bundle in api/bundle/ is committed
+/data/
+/api/assets/
+
+# Python
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Web
+node_modules/
+/web/dist/
+
+# OS
+.DS_Store
+Thumbs.db

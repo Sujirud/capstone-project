@@ -1,0 +1,35 @@
+# README.txt placed in each folder of data/grading/share/ by grading_set.py package.
+# body gets {folder}, {count} and the intro of that folder. Never mention splits or
+# which images are in the first 200.
+
+body = """
+ชุดภาพเกรดใต้ตา: {folder} ({count} ภาพ)
+
+{intro}
+
+วิธีเกรด
+1. เปิด undereye_grader.html ในโฟลเดอร์นี้ด้วย Chrome หรือ Edge แล้วเลือกโฟลเดอร์นี้ หน้าเว็บต้องขึ้นว่า "พบ {count} ภาพ"
+2. ใส่ชื่อเดิมทุกครั้ง สะกดเหมือนเดิม เครื่องมือเก็บผลตามชื่อ ถ้าพิมพ์ต่างไปจะเริ่มใหม่
+3. ปิดโหมดถนอมสายตาของจอก่อนเกรด เช่น Night light บน Windows หรือ Night Shift และ True Tone บน Mac เพราะสีจอเปลี่ยนการเห็นเงาใต้ตา
+4. เปิด Figure 2 ของบทความ GIHS ไว้ข้างกันเพื่อเทียบเกรด 0-3
+   Moradi A, et al. Validation of Photonumeric Assessment Scales for Temple Volume Deficit, Infraorbital Hollows, and Chin Retrusion. Dermatologic Surgery 2020;46(9):1148-1154
+   https://doi.org/10.1097/DSS.0000000000002269
+   ลิงก์นี้เปิดบทความฉบับเต็มของวารสาร ให้กดปุ่ม "PDF" ที่แถบด้านซ้ายของหน้า หรือลิงก์ "Download PDF"
+   แล้วเปิดไฟล์ PDF ไปที่หน้า 3 "Figure 2. Galderma Infraorbital Hollows Scale" ซูมดูได้ชัดกว่าภาพบนหน้าเว็บ
+   ภาพสเกลเป็นลิขสิทธิ์ของ Galderma ใช้ดูประกอบการเกรดเท่านั้น ห้ามตัดภาพไปเผยแพร่
+5. เกรดครบแล้วกด "ส่งออก CSV" แล้วส่งไฟล์ CSV กลับให้ทีม
+6. ส่ง CSV แล้วให้ลบโฟลเดอร์นี้และไฟล์ zip ออกจากเครื่อง ภาพเหล่านี้ใช้เกรดในโปรเจกต์นี้เท่านั้น ห้ามส่งต่อ
+"""
+
+[intro]
+practice = """
+ภาพฝึก ใช้ฝึกเกรดร่วมกันจนเข้าใจเกณฑ์ตรงกัน ระหว่างฝึกคุยกันได้
+"""
+pilot_200 = """
+200 ภาพแรก เกรดคนเดียว ห้ามคุยหรือดูเกรดของคนอื่นจนกว่าทุกคนจะส่ง CSV
+"""
+full_600 = """
+ชุดเต็ม 600 ภาพ ซึ่งรวม 200 ภาพแรกไว้แล้ว เกรดคนเดียว ห้ามคุยหรือดูเกรดของคนอื่น
+ถ้าใช้ชื่อเดิมบนเครื่องและ browser เดิม เครื่องมือจะนับภาพที่เกรดแล้วให้เอง
+ถ้าเปลี่ยนเครื่องหรือ browser ให้กด "นำเข้า CSV เพื่อทำต่อ" ด้วยไฟล์ CSV ของ 200 ภาพแรกก่อน
+"""

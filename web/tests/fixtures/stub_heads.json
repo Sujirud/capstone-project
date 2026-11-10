@@ -1,0 +1,270 @@
+{
+  "name": "stub_heads",
+  "meta": {
+    "age": 30,
+    "sex": "female",
+    "frontal_source": "camera",
+    "lang": "th",
+    "lab": false
+  },
+  "images": {
+    "frontal": {
+      "width": 1280,
+      "height": 1600,
+      "source": "camera"
+    },
+    "profile": {
+      "width": 1280,
+      "height": 1600,
+      "source": "camera"
+    }
+  },
+  "result": {
+    "request_id": "df16414a-8d2a-4645-be89-7247e644bb89",
+    "versions": {
+      "api": "0.1.0",
+      "model_bundle": "0.0.0-stub"
+    },
+    "lab": false,
+    "retake": [],
+    "quality": {
+      "frontal": {
+        "iod_px": 160.0,
+        "yaw_deg": 1.2,
+        "pitch_deg": -2.1,
+        "roll_deg": 0.4,
+        "smile": 0.04,
+        "jaw_open": 0.01,
+        "blink_left": 0.05,
+        "blink_right": 0.06,
+        "hair_jaw": 0.01,
+        "hair_undereye_left": 0.0,
+        "hair_undereye_right": 0.0,
+        "failed": []
+      },
+      "profile": {
+        "face_found": false,
+        "face_yaw_deg": null,
+        "silhouette_found": true,
+        "flipped": false,
+        "failed": []
+      }
+    },
+    "regions": [
+      {
+        "region": "jaw",
+        "status": "not_assessable",
+        "status_reasons": [
+          "model_not_ready"
+        ],
+        "warnings": [],
+        "measurements": [],
+        "overlay": null,
+        "probabilities": null,
+        "decision": null,
+        "procedures": [],
+        "procedures_withheld": [],
+        "notes": []
+      },
+      {
+        "region": "chin",
+        "status": "assessed",
+        "status_reasons": [],
+        "warnings": [],
+        "measurements": [
+          {
+            "name": "legan_angle",
+            "value": 17.0,
+            "unit": "deg",
+            "method": "measured",
+            "landmark_value": null,
+            "cutoffs": [
+              {
+                "value": 16.0,
+                "band": 1.5
+              },
+              {
+                "value": 20.0,
+                "band": 1.5
+              },
+              {
+                "value": 24.0,
+                "band": 1.5
+              }
+            ],
+            "reference": "ค่าปกติ 12° ช่วงที่ยอมรับได้ 8–16° แบ่งระดับทีละ 4°",
+            "source": "[5][26]"
+          }
+        ],
+        "overlay": {
+          "image": "profile",
+          "points": {
+            "g": [
+              720.0,
+              520.0
+            ],
+            "sn": [
+              736.0,
+              880.0
+            ],
+            "pog": [
+              706.0,
+              1190.0
+            ]
+          },
+          "lines": [
+            [
+              "g",
+              "sn"
+            ],
+            [
+              "sn",
+              "pog"
+            ]
+          ]
+        },
+        "probabilities": null,
+        "decision": {
+          "grade": null,
+          "grade_range": [
+            "0",
+            "1"
+          ],
+          "level": "borderline"
+        },
+        "procedures": [
+          {
+            "code": "chin_filler",
+            "name": "ฉีดฟิลเลอร์คาง",
+            "when": "รุกล้ำน้อยกว่า ใช้กับคางพร่องเล็กน้อย",
+            "checks": null
+          }
+        ],
+        "procedures_withheld": [],
+        "notes": []
+      },
+      {
+        "region": "undereye_left",
+        "status": "not_assessable",
+        "status_reasons": [
+          "model_not_ready"
+        ],
+        "warnings": [],
+        "measurements": [],
+        "overlay": null,
+        "probabilities": null,
+        "decision": null,
+        "procedures": [],
+        "procedures_withheld": [],
+        "notes": []
+      },
+      {
+        "region": "undereye_right",
+        "status": "not_assessable",
+        "status_reasons": [
+          "model_not_ready"
+        ],
+        "warnings": [],
+        "measurements": [],
+        "overlay": null,
+        "probabilities": null,
+        "decision": null,
+        "procedures": [],
+        "procedures_withheld": [],
+        "notes": []
+      },
+      {
+        "region": "nose_base",
+        "status": "not_assessable",
+        "status_reasons": [
+          "model_not_ready"
+        ],
+        "warnings": [],
+        "measurements": [],
+        "overlay": null,
+        "probabilities": null,
+        "decision": null,
+        "procedures": [],
+        "procedures_withheld": [],
+        "notes": []
+      },
+      {
+        "region": "nose_dorsum",
+        "status": "assessed",
+        "status_reasons": [],
+        "warnings": [],
+        "measurements": [
+          {
+            "name": "nasofacial_angle",
+            "value": 33.0,
+            "unit": "deg",
+            "method": "measured",
+            "landmark_value": null,
+            "cutoffs": [
+              {
+                "value": 30.1,
+                "band": 1.35
+              },
+              {
+                "value": 32.8,
+                "band": 1.35
+              },
+              {
+                "value": 38.4,
+                "band": 1.5
+              }
+            ],
+            "reference": "หญิง เกรด 0 อยู่ที่ 32.8–38.4° เกรด ≥2 เมื่อน้อยกว่า 30.1°",
+            "source": "[39]"
+          }
+        ],
+        "overlay": {
+          "image": "profile",
+          "points": {
+            "g": [
+              720.0,
+              520.0
+            ],
+            "n": [
+              706.0,
+              610.0
+            ],
+            "prn": [
+              820.0,
+              830.0
+            ],
+            "pog": [
+              706.0,
+              1190.0
+            ]
+          },
+          "lines": [
+            [
+              "g",
+              "pog"
+            ],
+            [
+              "n",
+              "prn"
+            ]
+          ]
+        },
+        "probabilities": null,
+        "decision": {
+          "grade": null,
+          "grade_range": [
+            "0",
+            "1"
+          ],
+          "level": "borderline"
+        },
+        "procedures": [],
+        "procedures_withheld": [
+          "no_procedure_at_grade"
+        ],
+        "notes": []
+      }
+    ],
+    "disclaimer": "ผลนี้เป็นการนำเกณฑ์จากงานวิจัยมาใช้กับค่าที่วัดจากภาพถ่าย ไม่ใช่การวินิจฉัย การตัดสินใจทำหัตถการต้องผ่านการตรวจโดยแพทย์"
+  }
+}

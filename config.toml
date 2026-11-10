@@ -1,0 +1,23 @@
+# Project paths, relative to the folder that holds this file.
+# Read them through facemeasure.paths; never hardcode them in scripts.
+
+[paths]
+data = "data"
+raw = "data/raw"
+scut = "data/raw/SCUT-FBP5500_v2"
+ffhq = "data/raw/ffhq"
+fei = "data/raw/fei"
+labels = "data/labels"
+grading = "data/grading"
+features = "data/features"
+outputs = "data/outputs"
+shared = "shared"
+tools = "tools"
+reports = "model/reports"
+assets = "api/assets"
+assets_lock = "api/assets.lock.json"
+bundle = "api/bundle"
+web_dist = "web/dist"
+web_src = "web/src"
+web_index = "web/index.html"
+web_fixtures = "web/tests/fixtures"
