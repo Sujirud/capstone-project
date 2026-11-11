@@ -5,7 +5,17 @@ import json
 import pytest
 
 from facemeasure import codes, paths
-from make_web_fixtures import CODES_NAME, cases, main, write_all
+from make_web_fixtures import (
+    CODES_NAME,
+    FRONTAL_POINTS,
+    PORTRAIT,
+    PROFILE_POINTS,
+    WEBCAM,
+    WEBCAM_IOD_PX,
+    cases,
+    main,
+    write_all,
+)
 
 
 @pytest.fixture(scope="module")
@@ -64,6 +74,29 @@ def test_each_file_holds_meta_images_and_a_full_result(written):
             size = data["images"][overlay["image"]]
             for x, y in overlay["points"].values():
                 assert 0 <= x <= size["width"] and 0 <= y <= size["height"]
+
+
+def test_the_default_frame_leaves_the_points_where_they_are():
+    assert PORTRAIT.points(FRONTAL_POINTS) == FRONTAL_POINTS
+    assert PORTRAIT.points(PROFILE_POINTS) == PROFILE_POINTS
+
+
+def test_webcam_case_is_a_small_face_in_a_1080p_frame(written):
+    # the size of real photos (web.md section 3.1), next to the portrait images of the other cases
+    data = load(written, "webcam_1080p.json")
+    for name in ("frontal", "profile"):
+        assert {k: data["images"][name][k] for k in ("width", "height")} == {"width": 1920, "height": 1080}
+    assert data["result"]["quality"]["frontal"]["iod_px"] == WEBCAM_IOD_PX
+    clear = load(written, "female_clear.json")
+    assert [r["region"] for r in data["result"]["regions"]] == [r["region"] for r in clear["result"]["regions"]]
+    assert [r["decision"] for r in data["result"]["regions"]] == [r["decision"] for r in clear["result"]["regions"]]
+    jaw = next(r for r in data["result"]["regions"] if r["region"] == codes.JAW)["overlay"]["points"]
+    width = jaw["go_r"][0] - jaw["go_l"][0]
+    assert width == pytest.approx((FRONTAL_POINTS["go_r"][0] - FRONTAL_POINTS["go_l"][0]) * WEBCAM.scale, abs=0.2)
+    assert width < 0.15 * WEBCAM.width
+    for name in cases():
+        if name != "webcam_1080p":
+            assert load(written, f"{name}.json")["images"]["frontal"]["width"] == PORTRAIT.width
 
 
 def test_no_profile_image_has_no_profile_size(written):

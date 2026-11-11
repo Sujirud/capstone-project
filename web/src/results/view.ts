@@ -7,7 +7,8 @@ import { IMAGES, type AnalyzeResult, type ImageName, type ImageSource } from "..
 import { cards } from "./cards.ts";
 import type { FrontalValues } from "../metrics.ts";
 import { labCompare, labJson } from "./lab.ts";
-import { overlayFigure, type ShownImage } from "./overlay.ts";
+import { overlayFigure } from "./figure.ts";
+import type { ShownImage } from "./overlay.ts";
 import { summary } from "./summary.ts";
 
 export interface ResultImage extends ShownImage {

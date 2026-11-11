@@ -213,7 +213,9 @@ describe.each(NAMES)("fixture %s", (name) => {
     expect(root.querySelectorAll("[data-retake]").length).toBe(0);
     const procedureButtons = root.querySelectorAll('[data-action="procedures"]').length;
     const copyButtons = root.querySelectorAll('[data-action="copy-json"]').length;
-    expect(root.querySelectorAll("button").length).toBe(procedureButtons + copyButtons);
+    // the figures have their own buttons: full screen and the legend (overlay.test.ts)
+    const outsideFigures = [...root.querySelectorAll("button")].filter((b) => !b.closest(".result-figure"));
+    expect(outsideFigures.length).toBe(procedureButtons + copyButtons);
   });
 
   it("draws every overlay on an SVG the size of its image, with a legend for every region", () => {

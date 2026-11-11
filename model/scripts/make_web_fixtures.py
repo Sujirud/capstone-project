@@ -43,7 +43,7 @@ from facemeasure.i18n import Texts
 from make_stub_bundle import stub_bundle, stub_parts
 
 CODES_NAME = "codes.json"
-WIDTH, HEIGHT = 1280, 1600  # pixels of every synthetic image, portrait like a phone photo
+WIDTH, HEIGHT = 1280, 1600  # pixels of a synthetic image, portrait like a phone photo, unless a Frame below says otherwise
 
 # A face centred in a 1280 x 1600 image, eyes 160 px apart; _l and _r are image sides
 FRONTAL_POINTS = {
@@ -59,6 +59,37 @@ FRONTAL_QUALITY = {
 }
 # A profile facing the image right
 PROFILE_POINTS = {"g": (720.0, 520.0), "n": (706.0, 610.0), "prn": (820.0, 830.0), "sn": (736.0, 880.0), "pog": (706.0, 1190.0)}
+
+
+FACE_CENTER = (640.0, 800.0)  # about the middle of FRONTAL_POINTS and PROFILE_POINTS
+
+
+@dataclass(frozen=True)
+class Frame:
+    """The size of a synthetic image and where its face is.
+
+    The points above, scaled by scale about FACE_CENTER and put at center; the default
+    leaves them where they are, in a WIDTH x HEIGHT image.
+    """
+
+    width: int = WIDTH
+    height: int = HEIGHT
+    scale: float = 1.0
+    center: tuple[float, float] = FACE_CENTER
+
+    def at(self, x: float, y: float) -> tuple[float, float]:
+        cx, cy = FACE_CENTER
+        return (round(self.center[0] + self.scale * (x - cx), 2), round(self.center[1] + self.scale * (y - cy), 2))
+
+    def points(self, points: dict) -> dict:
+        return {name: self.at(*p) for name, p in points.items()}
+
+
+PORTRAIT = Frame()
+# A 1080p webcam frame (landscape), the face as small as the capture guide lets it be:
+# eyes about 90 px apart, as in real photos at about 1 m (web.md section 3.1)
+WEBCAM_IOD_PX = 90.0
+WEBCAM = Frame(1920, 1080, scale=WEBCAM_IOD_PX / FRONTAL_QUALITY["iod_px"], center=(960.0, 497.0))
 
 # The example of api.md section 2.2: its inputs (as in tests/test_api_example.py) and its fields
 EXAMPLE_REGIONS = (codes.JAW, codes.NOSE_DORSUM)
@@ -102,35 +133,39 @@ def frontal_result(
     values: dict | None = None,
     points: dict | None = None,
     boxes: tuple[tuple[float, float], tuple[float, float], float] | None = None,
+    frame: Frame = PORTRAIT,
 ) -> FrontalResult:
     """A FrontalResult as analyze_frontal returns it, without any model.
 
     jaw_ratio and nose_ratio are the MediaPipe ratios, which become landmark_value.
-    boxes is (top-left of the left under-eye box, of the right one, side).
+    boxes is (top-left of the left under-eye box, of the right one, side). frame moves
+    the default points and boxes; points and boxes that are given stay as they are.
     """
     if not face:
         f = (codes.NO_FACE,)
-        return FrontalResult(WIDTH, HEIGHT, 0, None, None, None, None, f, codes.by_region(f), None, None, None)
+        return FrontalResult(frame.width, frame.height, 0, None, None, None, None, f, codes.by_region(f), None, None, None)
     values = dict(FRONTAL_QUALITY if values is None else values)
-    left, right, side = boxes or (UNDEREYE_LEFT_BOX, UNDEREYE_RIGHT_BOX, UNDEREYE_BOX_SIDE)
+    if boxes is None:
+        boxes = (frame.at(*UNDEREYE_LEFT_BOX), frame.at(*UNDEREYE_RIGHT_BOX), UNDEREYE_BOX_SIDE * frame.scale)
+    left, right, side = boxes
     blank = np.zeros((crops.CROP_SIZE, crops.CROP_SIZE, 3), dtype=np.uint8)
     face_crops = crops.Crops(
-        face=crops.Crop(blank, _box(300.0, 400.0, 680.0), False),
+        face=crops.Crop(blank, _box(*frame.at(300.0, 400.0), 680.0 * frame.scale), False),
         undereye_left=crops.Crop(blank, _box(*left, side), True),
         undereye_right=crops.Crop(blank, _box(*right, side), False),
-        frame=LevelFrame(center=np.array([WIDTH / 2, 700.0]), cos=1.0, sin=0.0),
+        frame=LevelFrame(center=np.array(frame.at(WIDTH / 2, 700.0)), cos=1.0, sin=0.0),
         iod_px=values["iod_px"],
     )
     ratios = FrontalRatios(
         jaw_ratio=jaw_ratio,
         nose_ratio=nose_ratio,
         nose_ratios={"98_327": nose_ratio},
-        points=dict(FRONTAL_POINTS if points is None else points),
+        points=dict(frame.points(FRONTAL_POINTS) if points is None else points),
     )
     failed = tuple(failed)
     return FrontalResult(
-        width=WIDTH,
-        height=HEIGHT,
+        width=frame.width,
+        height=frame.height,
         face_count=2 if codes.MULTIPLE_FACES in failed else 1,
         landmarks=np.zeros((478, 3)),
         blendshapes={},
@@ -151,10 +186,11 @@ def profile_result(
     face_found: bool = False,
     yaw: float | None = None,
     points: dict | None = None,
+    frame: Frame = PORTRAIT,
 ) -> P.ProfileResult:
-    """A ProfileResult whose edge was measured, as analyze_profile returns it."""
+    """A ProfileResult whose edge was measured, as analyze_profile returns it; frame moves the default points."""
     failed = tuple(failed)
-    pts = dict(PROFILE_POINTS if points is None else points)
+    pts = dict(frame.points(PROFILE_POINTS) if points is None else points)
     q = P.ProfileQuality(face_found=face_found, face_yaw_deg=yaw, silhouette_found=True, flipped=False, failed=failed)
     overlays = {
         region: P.Overlay(codes.PROFILE, {k: pts[k] for k in names}, P.OVERLAY_LINES[region])
@@ -162,8 +198,8 @@ def profile_result(
     }
     reasons = (P.FRONTAL_YAW,) if failed else ()
     return P.ProfileResult(
-        WIDTH, HEIGHT, q, failed, codes.profile_by_region(failed), reasons,
-        legan_angle=legan, nasofacial_angle=nasofacial, nose_depth=0.2, face_height=900.0, points=pts, overlays=overlays,
+        frame.width, frame.height, q, failed, codes.profile_by_region(failed), reasons,
+        legan_angle=legan, nasofacial_angle=nasofacial, nose_depth=0.2, face_height=900.0 * frame.scale, points=pts, overlays=overlays,
     )
 
 
@@ -248,6 +284,15 @@ def cases() -> dict[str, Case]:
             profile=lambda: profile_result(legan=12.5, nasofacial=35.5),
             predictions=_pred(0.80, 1.40, (0.15, 0.05), (0.1, 0.05)),
         ),
+        # female_clear in 1080p webcam frames, the size of real photos: a small face in a landscape image
+        "webcam_1080p": Case(
+            meta=_female(30),
+            frontal=lambda: frontal_result(
+                jaw_ratio=0.893, nose_ratio=1.07, values={**FRONTAL_QUALITY, "iod_px": WEBCAM_IOD_PX}, frame=WEBCAM,
+            ),
+            profile=lambda: profile_result(legan=18.0, nasofacial=35.5, frame=WEBCAM),
+            predictions=_pred(0.90, 1.05, (0.1, 0.05), (0.95, 0.82)),
+        ),
         # Under 18: grades that would have procedures, none shown
         "age_17": Case(
             meta=_female(17),
@@ -317,7 +362,8 @@ def build_case(name: str, case: Case, texts: Texts, bundles: dict[bool, bundle.B
     """The file of one case, its result checked against the api's schema."""
     api_version, schemas = _api_schemas()
     b = bundles[case.stub]
-    built = response.build(case.frontal(), case.profile(), case.predictions, case.meta, b, texts, lab=case.lab)
+    frontal, profile = case.frontal(), case.profile()
+    built = response.build(frontal, profile, case.predictions, case.meta, b, texts, lab=case.lab)
     built["regions"] = [r for r in built["regions"] if r["region"] in case.regions]
     result = {
         "request_id": case.request_id or request_id(name),
@@ -336,8 +382,8 @@ def build_case(name: str, case: Case, texts: Texts, bundles: dict[bool, bundle.B
     schemas.Meta.model_validate(meta)
     has_profile = result["quality"]["profile"]["silhouette_found"] is not None
     images = {
-        codes.FRONTAL: {"width": WIDTH, "height": HEIGHT, "source": case.meta.frontal_source},
-        codes.PROFILE: {"width": WIDTH, "height": HEIGHT, "source": case.profile_source} if has_profile else None,
+        codes.FRONTAL: {"width": frontal.width, "height": frontal.height, "source": case.meta.frontal_source},
+        codes.PROFILE: {"width": profile.width, "height": profile.height, "source": case.profile_source} if has_profile else None,
     }
     return {"name": name, "meta": meta, "images": images, "result": result}
 
